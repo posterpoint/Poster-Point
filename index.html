@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <style>
+      .zoom-modal {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(30,40,60,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      .zoom-modal img {
+        max-width: 90vw;
+        max-height: 90vh;
+        border-radius: 18px;
+        box-shadow: 0 8px 40px #2228;
+        background: #fff;
+        display: block;
+      }
+      .zoom-modal-close {
+        position: absolute;
+        top: 32px;
+        right: 48px;
+        font-size: 2.2em;
+        color: #fff;
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 10001;
+      }
+    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+  <title>Poster Point — Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="assets/logo-48.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-180.png">
+</head>
+<body>
+    <div id="zoom-modal" style="display:none;"></div>
+  <header>
+    <div class="logo">
+      <img src="assets/logo-48.png" srcset="assets/logo-96.png 2x" alt="Poster Point logo" class="site-logo">
+      <div>
+        <div class="title blinking-text">Poster Point</div>
+        <div class="subtitle">Prints • Stickers • Gifts</div>
+      </div>
+    </div>
+    <div style="flex:1"></div>
+    <nav style="display:flex;gap:12px;align-items:center">
+      <a href="index10_cartfixed.html" style="color:var(--muted); text-decoration:none; font-weight:700">Home</a>
+      <a href="#about" style="color:var(--muted); text-decoration:none; font-weight:700">About</a>
+      <a href="#contacts" style="color:var(--muted); text-decoration:none; font-weight:700">Contacts</a>
+        <a href="index10_cartfixed.html" class="checkout" style="padding:8px 12px">Shop</a>
+        <button id="customizationBtn" aria-label="Customization" title="Customization" style="background:var(--accent);color:#fff;padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:16px;margin-left:8px">Customization</button>
+      <button id="theme-toggle" aria-label="Toggle theme" title="Toggle theme" style="background:transparent;border:none;padding:8px;cursor:pointer;font-size:18px">🌙</button>
+    </nav>
+  </header>
+  <script>
+    // Customization button redirect
+    document.getElementById('customizationBtn').onclick = function() {
+      window.location.href = 'customization.html';
+    };
+  </script>
+
+  <main style="padding:40px; max-width:1000px; margin:0 auto">
+    <!-- Hero animation + recorder -->
+    <section id="hero" style="margin-bottom:28px">
+      <div style="width:100%;max-width:1000px;">
+        <h2 id="welcome-heading" class="welcome-heading" aria-hidden="false"></h2><span id="welcome-cursor" class="welcome-cursor" aria-hidden="true"></span>
+      </div>
+      <!-- Firefly opening video -->
+      <video id="main-hero-video" width="1000" height="360" style="width:100%;height:auto;max-width:1000px;display:block;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.08);margin-bottom:15px;border:4px solid #000000" autoplay loop muted playsinline preload="auto">
+        <source src="assets/Firefly Scene__Time__Action - Dialogue__Visuals__Music - Sound__1__0-00 - 0-05__TITLE CARD-OPENING S.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <script>
+        // Ensure video reloads and never shows download prompt
+        const heroVideo = document.getElementById('main-hero-video');
+        if(heroVideo) {
+          heroVideo.removeAttribute('controls');
+          heroVideo.addEventListener('error', function() {
+            // fallback: hide video if it fails to load
+            heroVideo.style.display = 'none';
+          });
+        }
+      </script>
+      <canvas id="hero-canvas" width="1000" height="360" style="width:100%;height:auto;max-width:1000px;display:none;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.08);border:4px solid #000000"></canvas>
+      <a id="download-link" style="display:none" tabindex="-1" aria-hidden="true"></a>
+      <!-- Second Firefly video -->
+      <video id="main-hero-video-2" width="1000" height="360" style="width:100%;height:auto;max-width:1000px;display:block;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.08);margin-top:15px;border:4px solid #000000" autoplay loop muted playsinline preload="auto">
+        <source src="assets/firefly-vertical.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <script>
+        // Ensure second video reloads and never shows download prompt
+        const heroVideo2 = document.getElementById('main-hero-video-2');
+        if(heroVideo2) {
+          heroVideo2.removeAttribute('controls');
+          heroVideo2.addEventListener('error', function() {
+            heroVideo2.style.display = 'none';
+          });
+        }
+      </script>
+    </section>
+
+    <!-- CTA Banner -->
+    <section id="cta-banner" style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); padding:24px; border-radius:12px; margin-bottom:30px; color:white; text-align:center; box-shadow:0 8px 24px rgba(26,83,92,0.2); animation: fadeInUp 0.6s ease-out">
+      <h2 style="margin:0 0 8px 0; font-size:24px">🎉 Exclusive Bulk Offers!</h2>
+      <p style="margin:0 0 16px 0; opacity:0.95; font-size:16px"><strong>Buy 3 Get 1 Free</strong> • <strong>Buy 5 Get 2 Free</strong> • <strong>Buy 10 Get 5 Free</strong></p>
+      <a href="index10_cartfixed.html" style="background:var(--cta); color:white; padding:12px 28px; border-radius:8px; text-decoration:none; font-weight:800; display:inline-block; transition:all 0.18s ease">Browse All Products →</a>
+    </section>
+
+    <section style="text-align:center; margin-bottom:30px">
+      <h1 style="font-size:28px; margin:0 0 8px 0">Beautiful posters, stickers and gifts</h1>
+      <p style="color:var(--muted); margin:0 0 18px">Browse curated categories or jump straight to our posters shop.</p>
+    </section>
+
+    <!-- Product Categories Grid -->
+    <section id="categories" style="margin-bottom:30px">
+      <h2 style="text-align:center; margin:0 0 20px 0; font-size:22px">Browse by Category</h2>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:16px;">
+        <a href="index10_cartfixed.html" class="category-card card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;min-height:120px">
+          <div style="font-size:32px;margin-bottom:8px">✨</div>
+          <div style="font-size:16px;font-weight:800">Aesthetics</div>
+        </a>
+        <a href="/shop.html" class="category-card card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;min-height:120px">
+          <div style="font-size:32px;margin-bottom:8px">🎌</div>
+          <div style="font-size:16px;font-weight:800">Anime</div>
+        </a>
+        <a href="/shop.html" class="category-card card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;min-height:120px">
+          <div style="font-size:32px;margin-bottom:8px">🏎️</div>
+          <div style="font-size:16px;font-weight:800">Cars</div>
+        </a>
+        <a href="/shop.html" class="category-card card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;min-height:120px">
+          <div style="font-size:32px;margin-bottom:8px">🦇</div>
+          <div style="font-size:16px;font-weight:800">DC Comics</div>
+        </a>
+        <a href="/shop.html" class="category-card card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;min-height:120px">
+          <div style="font-size:32px;margin-bottom:8px">🙏</div>
+          <div style="font-size:16px;font-weight:800">Devotional</div>
+        </a>
+        <a href="/shop.html" class="category-card card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;min-height:120px">
+          <div style="font-size:32px;margin-bottom:8px">⚡</div>
+          <div style="font-size:16px;font-weight:800">Marvel</div>
+        </a>
+        <a href="index10_cartfixed.html" class="category-card card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;min-height:120px">
+          <div style="font-size:32px;margin-bottom:8px">🚀</div>
+          <div style="font-size:16px;font-weight:800">Motivational</div>
+        </a>
+        <a href="/shop.html" class="category-card card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;min-height:120px">
+          <div style="font-size:32px;margin-bottom:8px">⚽</div>
+          <div style="font-size:16px;font-weight:800">Sports</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Product Type Categories -->
+    <section class="grid" style="grid-template-columns: repeat(3,1fr); gap:18px; margin-bottom:30px">
+      <a href="index10_cartfixed.html" class="card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;min-height:140px">
+        <div style="font-size:22px;font-weight:800">Posters</div>
+        <div style="color:var(--muted); margin-top:8px">Large prints • A4, A3</div>
+      </a>
+      <a href="/shop.html" class="card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;min-height:140px">
+        <div style="font-size:22px;font-weight:800">Bookmarks</div>
+        <div style="color:var(--muted); margin-top:8px">Paper & laminated bookmarks</div>
+      </a>
+      <a href="/shop.html" class="card" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;min-height:140px">
+        <div style="font-size:22px;font-weight:800">Stickers</div>
+        <div style="color:var(--muted); margin-top:8px">Waterproof & matte</div>
+      </a>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section id="featured" style="margin-bottom:30px">
+      <h2 style="text-align:center; margin:0 0 20px 0; font-size:22px">✨ Featured Products</h2>
+      <div id="featured-products" class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:20px">
+        <!-- Cards added by JavaScript -->
+      </div>
+      <div style="text-align:center">
+        <a href="index10_cartfixed.html" style="background:var(--accent); color:white; padding:12px 28px; border-radius:8px; text-decoration:none; font-weight:800; display:inline-block; transition:all 0.18s ease">View All Products →</a>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" style="margin-bottom:30px">
+      <h2 style="text-align:center; margin:0 0 20px 0; font-size:22px">💬 What Our Customers Say</h2>
+      <div class="testimonial-carousel" style="position:relative; overflow:hidden; border-radius:12px; background:var(--glass); padding:24px">
+        <div id="testimonials-container" style="display:flex; transition:transform 0.5s ease; gap:24px">
+          <div class="testimonial-card" style="flex:0 0 100%; min-width:100%; padding:20px; background:var(--card); border-radius:8px; border:1px solid rgba(78,205,196,0.2)">
+            <div style="display:flex; gap:4px; margin-bottom:12px">⭐⭐⭐⭐⭐</div>
+            <p style="margin:0 0 12px 0; font-style:italic; color:var(--muted)">"The quality of these posters is amazing! Arrived quickly and the colors are vibrant. Highly recommend!"</p>
+            <div style="font-weight:800; color:var(--primary)">— Ananya M.</div>
+          </div>
+          <div class="testimonial-card" style="flex:0 0 100%; min-width:100%; padding:20px; background:var(--card); border-radius:8px; border:1px solid rgba(78,205,196,0.2)">
+            <div style="display:flex; gap:4px; margin-bottom:12px">⭐⭐⭐⭐⭐</div>
+            <p style="margin:0 0 12px 0; font-style:italic; color:var(--muted)">"I purchased stickers for my laptop and they look fantastic. Great designs and excellent customer service!"</p>
+            <div style="font-weight:800; color:var(--primary)">— Rajesh K.</div>
+          </div>
+          <div class="testimonial-card" style="flex:0 0 100%; min-width:100%; padding:20px; background:var(--card); border-radius:8px; border:1px solid rgba(78,205,196,0.2)">
+            <div style="display:flex; gap:4px; margin-bottom:12px">⭐⭐⭐⭐⭐</div>
+            <p style="margin:0 0 12px 0; font-style:italic; color:var(--muted)">"PosterPoint has such a unique collection. I've bought multiple times and never been disappointed!"</p>
+            <div style="font-weight:800; color:var(--primary)">— Priya S.</div>
+          </div>
+          <div class="testimonial-card" style="flex:0 0 100%; min-width:100%; padding:20px; background:var(--card); border-radius:8px; border:1px solid rgba(78,205,196,0.2)">
+            <div style="display:flex; gap:4px; margin-bottom:12px">⭐⭐⭐⭐⭐</div>
+            <p style="margin:0 0 12px 0; font-style:italic; color:var(--muted)">"Fast delivery and excellent print quality — the colors are exactly as shown on the website."</p>
+            <div style="font-weight:800; color:var(--primary)">— Suman P.</div>
+          </div>
+          <div class="testimonial-card" style="flex:0 0 100%; min-width:100%; padding:20px; background:var(--card); border-radius:8px; border:1px solid rgba(78,205,196,0.2)">
+            <div style="display:flex; gap:4px; margin-bottom:12px">⭐⭐⭐⭐⭐</div>
+            <p style="margin:0 0 12px 0; font-style:italic; color:var(--muted)">"Great customer support — they answered my customization questions and helped with sizing."</p>
+            <div style="font-weight:800; color:var(--primary)">— Neha R.</div>
+          </div>
+          <div class="testimonial-card" style="flex:0 0 100%; min-width:100%; padding:20px; background:var(--card); border-radius:8px; border:1px solid rgba(78,205,196,0.2)">
+            <div style="display:flex; gap:4px; margin-bottom:12px">⭐⭐⭐⭐⭐</div>
+            <p style="margin:0 0 12px 0; font-style:italic; color:var(--muted)">"Affordable prices and lovely designs — I'll be ordering again for gifts."</p>
+            <div style="font-weight:800; color:var(--primary)">— Vikram T.</div>
+          </div>
+        </div>
+        <button id="prev-testimonial" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:var(--accent); border:none; color:white; width:40px; height:40px; border-radius:50%; cursor:pointer; font-weight:800; z-index:10">❮</button>
+        <button id="next-testimonial" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:var(--accent); border:none; color:white; width:40px; height:40px; border-radius:50%; cursor:pointer; font-weight:800; z-index:10">❯</button>
+      </div>
+    </section>
+
+    <!-- Newsletter Signup Section -->
+    <section id="whatsapp-signup" style="background: linear-gradient(135deg, var(--highlight) 0%, rgba(255,107,107,0.1) 100%); padding:32px; border-radius:12px; margin-bottom:30px; text-align:center">
+      <h2 style="margin:0 0 12px 0; font-size:22px; color:var(--primary)">💬 Get Exclusive Offers on WhatsApp</h2>
+      <p style="color:var(--primary); margin:0 0 20px 0; opacity:0.9">Enter your WhatsApp number to receive exclusive deals, new products, and special offers directly from Poster Point!</p>
+      <form id="whatsapp-form" style="display:flex; flex-direction:column; align-items:center; gap:12px; max-width:500px; margin:0 auto">
+        <input id="whatsapp-number" type="tel" placeholder="Enter your WhatsApp number" required pattern="[0-9]{10,13}" style="padding:12px 16px; border:2px solid var(--primary); border-radius:8px; width:100%; font-family:inherit; color:var(--text); background:white">
+        <button type="submit" style="background:linear-gradient(90deg,#ffb74d,#b85c00); color:white; padding:12px 32px; border:none; border-radius:8px; font-weight:800; cursor:pointer; transition:all 0.18s ease; width:100%; font-size:1.1em; letter-spacing:1px; box-shadow:0 2px 12px #b85c0033">🎨 Get Offers Instantly</button>
+      </form>
+      <div id="whatsapp-message" style="margin-top:12px; color:var(--primary); font-weight:600; min-height:20px"></div>
+    </section>
+
+    <section id="about" style="margin-top:28px; padding:18px; background:var(--glass); border-radius:12px">
+      <h2 style="margin:0 0 8px 0">About PosterPoint</h2>
+      <p style="color:var(--muted); margin:0 0 8px 0">Welcome to PosterPoint, your premier destination for high-quality posters, prints, and visual communication solutions. With a passion for creativity and innovation, we strive to inspire and empower individuals, businesses, and organizations to express themselves and connect with their audience.</p>
+      <p style="color:var(--muted); margin:0 0 8px 0">At PosterPoint, we understand the power of visual storytelling and the impact it can have on people's lives. Our team of experts is dedicated to providing a vast range of posters, from motivational and inspirational designs to custom-made prints for events, conferences, and exhibitions.</p>
+      <p style="color:var(--muted); margin:0">With a commitment to quality, customer satisfaction, and timely delivery, PosterPoint has established itself as a trusted name in the industry. Whether you're a student, entrepreneur, or marketing professional, we're here to help you make a lasting impression with our stunning posters and prints.</p>
+      <p style="color:var(--muted); margin:10px 0 0 0; font-weight:600">Join the PosterPoint community today and discover the art of visual communication!</p>
+      
+      <!-- Copyright & Attribution Notice -->
+      <div style="margin-top:16px; padding:14px; background:rgba(0,0,0,0.05); border-radius:8px; border-left:4px solid var(--accent)">
+        <h3 style="margin:0 0 8px 0; font-size:14px; font-weight:700; color:var(--text)">Content Attribution & Copyright Notice</h3>
+        <p style="color:var(--muted); margin:0 0 8px 0; font-size:13px"><strong>Fair Use & Attribution:</strong> The images, designs, and content displayed on PosterPoint are curated from various publicly available sources including but not limited to Pinterest, Google Images, social media platforms, and other online repositories. These materials are collected and presented for inspirational, aesthetic, and commercial purposes.</p>
+        <p style="color:var(--muted); margin:0 0 8px 0; font-size:13px"><strong>Copyright Compliance:</strong> We acknowledge that many images and designs on this platform may be protected by copyright or other intellectual property rights held by their original creators, artists, photographers, or copyright holders. The collection and display of these works is done in accordance with fair use principles and applicable copyright laws.</p>
+        <p style="color:var(--muted); margin:0 0 8px 0; font-size:13px"><strong>Original Attribution:</strong> Where original creator information is available, we strive to provide proper attribution. Users should note that by purchasing prints or merchandise featuring these designs, they acknowledge that original copyrights remain with the respective creators and rights holders.</p>
+        <p style="color:var(--muted); margin:0 0 8px 0; font-size:13px"><strong>Commercial Use:</strong> The products sold through PosterPoint are printed reproductions intended for personal use. Customers are responsible for ensuring their use of purchased materials complies with applicable copyright laws and the rights of original creators.</p>
+        <p style="color:var(--muted); margin:0; font-size:13px"><strong>Intellectual Property Rights:</strong> If you believe any content infringes on your copyright or intellectual property rights, please contact us immediately at <a href="mailto:poster.point4@gmail.com" style="color:var(--accent); text-decoration:none">poster.point4@gmail.com</a> with details and proof of ownership. We will promptly investigate and remove any infringing content.</p>
+      </div>
+    </section>
+
+    <section id="contacts" style="margin-top:18px; padding:18px; display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap">
+      <div style="flex:1; background:var(--glass); padding:12px; border-radius:8px; min-width:260px">
+        <h3 style="margin:0 0 6px 0">Contact us</h3>
+        <div style="color:var(--muted)">Email: <a href="mailto:poster.point4@gmail.com" style="color:var(--muted)">poster.point4@gmail.com</a></div>
+        <div style="color:var(--muted); margin-top:6px">Phone: <a href="tel:+917086743957" style="color:var(--muted)">+91 70867 43957</a></div>
+      </div>
+      <div style="width:260px; background:var(--glass); padding:12px; border-radius:8px; flex-basis:100%">
+        <h3 style="margin:0 0 6px 0">Location</h3>
+        <div style="color:var(--muted)">Moranhat, Assam, India</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+
+  <!-- Featured Products Script -->
+  <script>
+          // WhatsApp Signup Script
+          window.initWhatsAppSignup = function() {
+            var form = document.getElementById('whatsapp-form');
+            var message = document.getElementById('whatsapp-message');
+            var numberInput = document.getElementById('whatsapp-number');
+            if (!form || !message || !numberInput) return;
+            form.addEventListener('submit', function(e) {
+              e.preventDefault();
+              var number = numberInput.value.trim().replace(/^\+?91/, '');
+              var phoneRegex = /^[0-9]{10,13}$/;
+              if (!number || !phoneRegex.test(number)) {
+                message.textContent = '❌ Please enter a valid WhatsApp number.';
+                message.style.color = '#FF6B6B';
+                return;
+              }
+              // Powerful, positive message with a motivational thought
+              var thoughts = [
+                '"The best way to predict the future is to create it." — Abraham Lincoln',
+                '"Success is not the key to happiness. Happiness is the key to success." — Albert Schweitzer',
+                '"Dream big and dare to fail." — Norman Vaughan',
+                '"Quality is not an act, it is a habit." — Aristotle',
+                '"Your only limit is your mind."',
+                '"Great things never come from comfort zones."',
+                '"Do something today that your future self will thank you for."',
+                '"Creativity takes courage." — Henri Matisse',
+                '"The future belongs to those who believe in the beauty of their dreams." — Eleanor Roosevelt',
+                '"Art enables us to find ourselves and lose ourselves at the same time." — Thomas Merton'
+              ];
+              var randomThought = thoughts[Math.floor(Math.random() * thoughts.length)];
+              var offerMsg = `*🎉 Welcome to Poster Point! 🎉*%0A%0A*Thank you for joining our exclusive WhatsApp community!*%0A%0A*🌟 Experience the finest quality posters, stickers, and gifts crafted to inspire, elevate, and add joy to your space.*%0A%0A*✨ Every product is made with premium materials and artistic passion, so you feel the luxury and uniqueness in every piece.*%0A%0A*We believe in making your world more beautiful, one poster at a time.*%0A%0A*💎 Enjoy exclusive offers, new arrivals, and special deals—just for you!*%0A%0A*Motivational Thought:*%0A_${randomThought}_%0A%0A*Thank you for choosing Poster Point. Your journey to premium art begins now!*`;
+              var url = `https://wa.me/917086743957?text=${offerMsg}`;
+              window.open(url, '_blank');
+              message.innerHTML = '✅ You will instantly receive a themed, powerful message and exclusive offers on WhatsApp!';
+              message.style.color = '#4ECDC4';
+              form.reset();
+              numberInput.focus();
+              setTimeout(function() { message.textContent = ''; }, 12000);
+            });
+            numberInput.addEventListener('focus', function() {
+              if (message.textContent.indexOf('❌') !== -1) {
+                message.textContent = '';
+              }
+            });
+          };
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initWhatsAppSignup);
+          } else {
+            initWhatsAppSignup();
+          }
+      // Add zoom modal to all images
+      window.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('img').forEach(img => {
+          img.style.cursor = 'zoom-in';
+          img.onclick = function() {
+            const modal = document.getElementById('zoom-modal');
+            modal.innerHTML = `<button class='zoom-modal-close'>&times;</button><img src='${img.src}' alt='zoomed'>`;
+            modal.style.display = '';
+            modal.querySelector('.zoom-modal-close').onclick = function() {
+              modal.style.display = 'none';
+              modal.innerHTML = '';
+            };
+            modal.onclick = function(e) {
+              if(e.target === modal) { modal.style.display = 'none'; modal.innerHTML = ''; }
+            };
+          };
+        });
+      });
+    // Load featured products from generated manifest and show a random selection each page load.
+    window.loadFeaturedProducts = async function() {
+      var container = document.getElementById('featured-products');
+      if (!container) return;
+      container.innerHTML = '';
+      try {
+        // Use the available manifest file in dist/data/products.json
+        var fetchUrl = './dist/data/products.json';
+        console.log('Fetching featured products from:', fetchUrl);
+        var resp = await fetch(fetchUrl, {cache: 'no-store'});
+        if (!resp.ok) throw new Error('Failed to load manifest: ' + fetchUrl + ' (status ' + resp.status + ")");
+        var all = await resp.json();
+        function shuffle(array) {
+          for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = array[i]; array[i] = array[j]; array[j] = t;
+          }
+          return array;
+        }
+        var shuffled = shuffle(all.slice());
+        // Only use products with a valid image path
+        var withImages = shuffled.filter(function(p) {
+          return p.image && typeof p.image === 'string' && p.image.match(/\.(jpg|jpeg|png|webp|gif)$/i);
+        });
+        var pickCount = Math.min(4, withImages.length);
+        var products = withImages.slice(0, pickCount);
+        products.forEach(function(p) {
+          var card = document.createElement('div');
+          card.className = 'card';
+          card.style.display = 'flex';
+          card.style.flexDirection = 'column';
+          card.style.overflow = 'visible';
+          card.style.alignItems = 'center';
+          var thumb = document.createElement('div');
+          thumb.className = 'thumb';
+          thumb.style.display = 'flex';
+          thumb.style.alignItems = 'center';
+          thumb.style.justifyContent = 'center';
+          thumb.style.height = '320px';
+          thumb.style.width = '100%';
+          thumb.style.background = '#f9f9f9';
+          var img = document.createElement('img');
+          img.alt = p.name || p.id;
+          img.src = 'dist/' + p.image.replace(/^\/?/, '');
+          img.style.maxWidth = '100%';
+          img.style.maxHeight = '100%';
+          img.style.objectFit = 'contain';
+          img.style.objectPosition = 'center';
+          img.style.backgroundColor = 'transparent';
+          img.onerror = function() {
+            this.src = 'assets/logo-48.png';
+            this.style.objectFit = 'contain';
+          };
+          thumb.appendChild(img);
+          var body = document.createElement('div');
+          body.className = 'card-body';
+          var priceText = (typeof p.price === 'number') ? ('₹' + p.price) : '';
+          body.innerHTML = '<div class="product-name">' + (p.name || p.id) + '</div>' +
+                           '<div class="product-price">' + priceText + '</div>' +
+                           '<div class="muted">' + (p.category || '') + '</div>' +
+                           '';
+          card.appendChild(thumb);
+          card.appendChild(body);
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error('Featured load error:', err);
+        var fallback = document.createElement('div');
+        fallback.className = 'card';
+        fallback.style.padding = '24px';
+        fallback.style.color = 'red';
+        fallback.textContent = 'Featured products currently unavailable. ' + (err && err.message ? err.message : '');
+        container.appendChild(fallback);
+      }
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadFeaturedProducts);
+    } else {
+      loadFeaturedProducts();
+    }
+  </script>
+
+  <!-- Testimonials Carousel Script -->
+  <script>
+    window.initTestimonialCarousel = function() {
+      var container = document.getElementById('testimonials-container');
+      var prevBtn = document.getElementById('prev-testimonial');
+      var nextBtn = document.getElementById('next-testimonial');
+      
+      if (!container || !prevBtn || !nextBtn) return;
+      
+      var current = 0;
+      var cards = container.querySelectorAll('.testimonial-card');
+      var total = cards.length;
+      
+      function update() {
+        container.style.transform = 'translateX(-' + (current * 100) + '%)';
+      }
+      
+      prevBtn.addEventListener('click', function() {
+        current = (current - 1 + total) % total;
+        update();
+      });
+      
+      nextBtn.addEventListener('click', function() {
+        current = (current + 1) % total;
+        update();
+      });
+      
+      setInterval(function() {
+        current = (current + 1) % total;
+        update();
+      }, 6000);
+      
+      update();
+    };
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTestimonialCarousel);
+    } else {
+      initTestimonialCarousel();
+    }
+  </script>
+
+  <!-- Newsletter Form Script -->
+  <script>
+    window.initNewsletter = function() {
+      var form = document.getElementById('newsletter-form');
+      var message = document.getElementById('newsletter-message');
+      var emailInput = document.getElementById('newsletter-email');
+      
+      if (!form || !message || !emailInput) return;
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var email = emailInput.value.trim();
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        // Validation
+        if (!email) {
+          message.textContent = '❌ Please enter your email address';
+          message.style.color = '#FF6B6B';
+          return;
+        }
+        
+        if (!emailRegex.test(email)) {
+          message.textContent = '❌ Please enter a valid email address';
+          message.style.color = '#FF6B6B';
+          return;
+        }
+        
+        // Show processing message
+        message.innerHTML = '⏳ Sending welcome email...';
+        message.style.color = '#FFD700';
+        
+        // Send to backend - use SMTP email handler
+        var backendUrl = 'backend/subscribe.php';
+        
+        fetch(backendUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email
+          })
+        })
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          if (data.success) {
+            // Success message
+            message.innerHTML = '✅ <strong>Welcome!</strong><br>' +
+              '<small>Check your email for exclusive offers</small><br>' +
+              '<small style="color: #FF6B6B; font-weight: bold;">Use code: WELCOME15 for 15% OFF!</small>';
+            message.style.color = '#4ECDC4';
+            message.style.fontSize = '13px';
+            message.style.lineHeight = '1.6';
+            
+            // Reset form
+            form.reset();
+            emailInput.focus();
+            
+            // Store locally
+            var subscriber = {
+              email: email,
+              code: 'WELCOME15',
+              timestamp: new Date().toLocaleString()
+            };
+            var subscribers = JSON.parse(localStorage.getItem('posterpoint_subscribers') || '[]');
+            subscribers.push(subscriber);
+            localStorage.setItem('posterpoint_subscribers', JSON.stringify(subscribers));
+            
+            console.log('✅ Subscription successful!', data);
+            
+            setTimeout(function() {
+              message.textContent = '';
+            }, 10000);
+          } else {
+            // Error message
+            message.innerHTML = '⚠️ <strong>Error</strong><br>' +
+              '<small>' + (data.message || data.error || 'Failed to subscribe') + '</small>';
+            message.style.color = '#FF6B6B';
+            message.style.fontSize = '13px';
+            
+            console.error('Error:', data);
+            
+            setTimeout(function() {
+              message.textContent = '';
+            }, 8000);
+          }
+        })
+        .catch(function(error) {
+          // Network error
+          message.innerHTML = '❌ <strong>Connection Error</strong><br>' +
+            '<small>Please check backend setup</small>';
+          message.style.color = '#FF6B6B';
+          message.style.fontSize = '13px';
+          
+          console.error('Subscription error:', error);
+          
+          setTimeout(function() {
+            message.textContent = '';
+          }, 8000);
+        });
+      });
+      
+      emailInput.addEventListener('focus', function() {
+        if (message.textContent.indexOf('❌') !== -1) {
+          message.textContent = '';
+        }
+      });
+    };
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initNewsletter);
+    } else {
+      initNewsletter();
+    }
+  </script>
+  <!-- Theme Toggle Script -->
+  <script>
+    (function() {
+      var themeToggleBtn = document.getElementById('theme-toggle');
+      var currentTheme = localStorage.getItem('theme') || 'light';
+      
+      function applyTheme(theme) {
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          themeToggleBtn.textContent = '☀️';
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          themeToggleBtn.textContent = '🌙';
+        }
+      }
+      
+      themeToggleBtn.addEventListener('click', function() {
+        currentTheme = (currentTheme === 'light') ? 'dark' : 'light';
+        localStorage.setItem('theme', currentTheme);
+        applyTheme(currentTheme);
+      });
+      
+      applyTheme(currentTheme);
+    })();
+  </script>
+
+  <!-- Page Transitions Script -->
+  <script>
+    (function() {
+      document.body.style.opacity = '0';
+      document.body.style.transition = 'opacity 0.4s ease-in-out';
+      
+      setTimeout(function() {
+        document.body.style.opacity = '1';
+      }, 50);
+      
+      document.querySelectorAll('a').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          if (!link.target && link.href && link.href.indexOf('.html') !== -1) {
+            e.preventDefault();
+            document.body.style.opacity = '0';
+            setTimeout(function() {
+              window.location.href = link.href;
+            }, 250);
+          }
+        });
+      });
+    })();
+  </script>
+
+  <!-- Typed Welcome Heading Script -->
+  <script>
+    window.typeWelcome = function() {
+      var el = document.getElementById('welcome-heading');
+      var cursor = document.getElementById('welcome-cursor');
+      if (!el) return;
+      
+      var text = 'Welcome to Poster Point';
+      var i = 0;
+      el.textContent = '';
+      cursor.style.display = 'inline-block';
+      
+      var interval = setInterval(function() {
+        el.textContent += text.charAt(i);
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+        }
+      }, 90);
+    };
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', typeWelcome);
+    } else {
+      typeWelcome();
+    }
+  </script>
+
+  <!-- Smooth Scroll & Fade-in Animations -->
+  <script>
+    (function() {
+      var observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+      
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+      
+      document.querySelectorAll('section').forEach(function(section) {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        observer.observe(section);
+      });
+    })();
+  </script>
+
+  <!-- Canvas Animation -->
+  <script>
+    (function() {
+      var canvas = document.getElementById('hero-canvas');
+      if (!canvas) return;
+      
+      var ctx = canvas.getContext('2d');
+      var DPR = window.devicePixelRatio || 1;
+      var W = 1000, H = 360;
+      canvas.width = W * DPR;
+      canvas.height = H * DPR;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.scale(DPR, DPR);
+
+      var posterSrcs = ['assets/014.jpg', 'assets/logo-48.png', 'assets/014.jpg', 'assets/logo-48.png'];
+      var posters = posterSrcs.map(function(src) {
+        var img = new Image();
+        img.src = src;
+        return {
+          img: img,
+          x: -300,
+          y: 0,
+          w: 220,
+          h: 300,
+          targetX: 0,
+          targetY: 20,
+          taped: false
+        };
+      });
+
+      var targets = [60, 300, 540, 780];
+      posters.forEach(function(p, i) {
+        p.targetX = targets[i] - 20;
+        p.targetY = 28 + (i % 2 ? 10 : 0);
+        p.x = p.targetX - 400;
+        p.y = p.targetY;
+      });
+
+      var DURATION = 8000;
+      var startAt = null;
+
+      function drawBackground() {
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg') || '#F7FFF7';
+        ctx.fillRect(0, 0, W, H);
+        var g = ctx.createLinearGradient(0, H * 0.6, 0, H);
+        g.addColorStop(0, 'rgba(0,0,0,0.02)');
+        g.addColorStop(1, 'rgba(0,0,0,0.06)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, H * 0.6, W, H * 0.4);
+      }
+
+      function step(ts) {
+        if (!startAt) startAt = ts;
+        var elapsed = ts - startAt;
+        
+        drawBackground();
+        
+        posters.forEach(function(p, i) {
+          var appearAt = 1500 + i * 700;
+          var duration = 800;
+          var prog = Math.min(1, Math.max(0, (elapsed - appearAt) / duration));
+          prog = 1 - Math.pow(1 - prog, 3);
+          var curX = p.targetX - (1 - prog) * 400;
+          p.x = curX;
+          
+          ctx.save();
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = 'rgba(0,0,0,0.15)';
+          ctx.shadowBlur = 12;
+          ctx.shadowOffsetY = 6;
+          ctx.fillRect(p.x, p.y, p.w, p.h);
+          ctx.shadowColor = 'transparent';
+          
+          if (p.img && p.img.complete) {
+            var iw = p.img.width;
+            var ih = p.img.height;
+            var scale = Math.min(p.w / iw, p.h / ih);
+            var iw2 = iw * scale;
+            var ih2 = ih * scale;
+            var ix = p.x + (p.w - iw2) / 2;
+            var iy = p.y + (p.h - ih2) / 2;
+            ctx.drawImage(p.img, ix, iy, iw2, ih2);
+          }
+          
+          ctx.restore();
+        });
+        
+        if (elapsed < DURATION) {
+          requestAnimationFrame(step);
+        }
+      }
+
+      var toLoad = posters.length;
+      posters.forEach(function(p) {
+        p.img.onload = function() {
+          toLoad--;
+          if (toLoad === 0) {
+            var observer = new IntersectionObserver(function(entries) {
+              entries.forEach(function(entry) {
+                if (entry.isIntersecting && !startAt) {
+                  startAt = null;
+                  requestAnimationFrame(step);
+                  observer.unobserve(canvas);
+                }
+              });
+            }, {threshold: 0.5});
+            observer.observe(canvas);
+          }
+        };
+        p.img.onerror = function() {
+          toLoad--;
+          if (toLoad === 0) {
+            var observer = new IntersectionObserver(function(entries) {
+              entries.forEach(function(entry) {
+                if (entry.isIntersecting && !startAt) {
+                  startAt = null;
+                  requestAnimationFrame(step);
+                  observer.unobserve(canvas);
+                }
+              });
+            }, {threshold: 0.5});
+            observer.observe(canvas);
+          }
+        };
+      });
+    })();
+  </script>
+</body>
+</html>

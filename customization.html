@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Poster Point - Customization</title>
+    <style>
+      body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff8f0; margin: 0; padding: 0; }
+      .container { max-width: 600px; margin: 48px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 32px #b85c0033; padding: 32px; }
+      h1 { color: #b85c00; margin-bottom: 18px; }
+      label { display: block; margin: 18px 0 6px; font-weight: 500; }
+      input, textarea, select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ffb74d; margin-bottom: 18px; font-size: 1em; }
+      button { background: #b85c00; color: #fff; border: none; border-radius: 8px; padding: 12px 32px; font-size: 1.1em; cursor: pointer; font-weight: 600; }
+      button:hover { background: #ffb74d; color: #b85c00; }
+      .success { color: #388e3c; margin-top: 18px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Customize Your Poster</h1>
+      <div style="background:#fffbe6;border:1px solid #ffb74d;border-radius:8px;padding:16px 20px;margin-bottom:18px;color:#b85c00;font-weight:500;">
+        <span>Note: Due to web restrictions, you will need to send us your reference image manually in WhatsApp after submitting your customization request. We cannot directly access your image or order through the website.</span>
+      </div>
+      <form id="customForm">
+        <label for="fileUpload">Upload Reference Image (drag & drop)</label>
+        <div id="dropZone" style="border:2px dashed #ffb74d;border-radius:8px;padding:24px;text-align:center;margin-bottom:18px;background:#fffbe6;cursor:pointer;">
+          <span id="dropText">Drag & drop an image here or click to select</span>
+          <input type="file" id="fileUpload" name="fileUpload" accept="image/*" style="display:none;" />
+        </div>
+        <label for="size">Size (inches)</label>
+        <input type="text" id="size" name="size" placeholder="e.g. 12x18" required />
+        <label for="details">Customization Details</label>
+        <textarea id="details" name="details" rows="4" placeholder="Describe your custom poster..." required></textarea>
+        <button type="button" id="whatsappBtn">Send via WhatsApp</button>
+      </form>
+      <div id="successMsg" class="success" style="display:none;">Thank you! Your customization request has been submitted.</div>
+      <div id="successMsg" class="success" style="display:none;">Thank you! Your customization request has been submitted.</div>
+    </div>
+    <script>
+      // Drag & drop logic
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileUpload');
+      const dropText = document.getElementById('dropText');
+      let uploadedFileName = '';
+
+      dropZone.onclick = () => fileInput.click();
+      dropZone.ondragover = (e) => { e.preventDefault(); dropZone.style.background = '#fff8e1'; };
+      dropZone.ondragleave = (e) => { e.preventDefault(); dropZone.style.background = '#fffbe6'; };
+      dropZone.ondrop = (e) => {
+        e.preventDefault();
+        dropZone.style.background = '#fffbe6';
+        if (e.dataTransfer.files.length) {
+          fileInput.files = e.dataTransfer.files;
+          uploadedFileName = fileInput.files[0].name;
+          dropText.textContent = 'Selected: ' + uploadedFileName;
+        }
+      };
+      fileInput.onchange = () => {
+        if (fileInput.files.length) {
+          uploadedFileName = fileInput.files[0].name;
+          dropText.textContent = 'Selected: ' + uploadedFileName;
+        }
+      };
+
+      document.getElementById('whatsappBtn').onclick = function() {
+        var size = document.getElementById('size').value;
+        var details = document.getElementById('details').value;
+        var fileMsg = uploadedFileName ? `%0AReference Image: ${uploadedFileName}` : '';
+        var msg = `Poster Customization Request:%0ASize: ${size}%0ADetails: ${details}${fileMsg}%0A(Please send the image file directly in WhatsApp chat)`;
+        var url = `https://wa.me/917086743957?text=${msg}`;
+        window.open(url, '_blank');
+      };
+    </script>
+  </body>
+</html>
