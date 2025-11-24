@@ -135,6 +135,11 @@
 		.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);opacity:0;visibility:hidden;transition:opacity .2s ease;z-index:65}
 		.overlay.show{opacity:1;visibility:visible}
 
+		/* Mobile cart open indicator (small banner shown when cart opens on phones) */
+		#cart-mobile-indicator{position:fixed;left:12px;right:12px;bottom:18px;background:linear-gradient(90deg,#111,#222);color:var(--fg);padding:10px 14px;border-radius:10px;text-align:center;font-weight:700;z-index:95;display:none;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+		body.cart-open-mobile #cart-mobile-indicator{display:block;animation:cartIndicatorIn .22s ease}
+		@keyframes cartIndicatorIn{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+
 		/* Sidebars float (overlay) */
 		.main{transition:none}
 		.brand-small{font-weight:700;font-size:14px;margin-bottom:18px;letter-spacing:0.6px}
@@ -459,12 +464,27 @@
 				overlay.classList.add('show');
 				activateTrap(cartSidebar);
 				renderCart(); // Always refresh cart content on open
+				// Show mobile indicator when opening cart on small screens
+				if(window.innerWidth <= 640){
+					document.body.classList.add('cart-open-mobile');
+					// ensure indicator element exists
+					if(!document.getElementById('cart-mobile-indicator')){
+						const el = document.createElement('div');
+						el.id = 'cart-mobile-indicator';
+						el.textContent = 'Cart Open — Swipe down to continue shopping';
+						document.body.appendChild(el);
+					}
+				}
 			}
 			function closeCart(){
 				cartSidebar.classList.remove('open');
 				cartSidebar.setAttribute('aria-hidden','true');
 				overlay.classList.remove('show');
 				deactivateTrap(cartSidebar);
+				// Hide mobile indicator
+				document.body.classList.remove('cart-open-mobile');
+				const ind = document.getElementById('cart-mobile-indicator');
+				if(ind) ind.remove();
 			}
 
 			// --- Data Maps ---
@@ -603,6 +623,22 @@
 				let thumbHtml = '';
 				let thumbSrc = folderHref + file;
 				let fallbackSrc = '';
+				// If we have a manifest (fileMap) prefer the _full variant to avoid initial 404s
+				try {
+					if(folderHref.startsWith('outputs/')){
+						const ext = (file.match(/\.(jpg|jpeg|png)$/i) || [])[0] || '.jpg';
+						const base = file.replace(/\.(jpg|jpeg|png)$/i, '');
+						const fullName = base + '_full' + ext;
+						const folderKey = decodeURIComponent(folderHref.replace(/^outputs\//, '').replace(/\/$/, ''));
+						if(fileMap && Array.isArray(fileMap[folderKey]) && fileMap[folderKey].includes(fullName)){
+							thumbSrc = folderHref + fullName;
+							fallbackSrc = '';
+						} else {
+							// fallback candidate
+							fallbackSrc = folderHref + base + '_full' + ext;
+						}
+					}
+				} catch(e) { /* ignore manifest errors */ }
 				// Special logic for bookmarks: map BM-###.ext to outputs/BOOKMARK/BOO-###_full.jpg
 				if(label.toLowerCase().includes('bookmark')) {
 					// Try to match BM-###.ext to BOO-###_full.jpg
