@@ -1321,7 +1321,7 @@
 				detailSizeEl.innerHTML = '';
 				detailDesc.textContent = payload.details || ''; // Assuming 'details' might exist, otherwise empty
 
-				// Image logic (robust fallback, matches catalog card)
+				// Image logic (robust fallback, prefer outputs/_full variant)
 				if(payload.file){
 					const imgEl = document.createElement('img');
 					imgEl.style.width = '100%';
@@ -1329,33 +1329,41 @@
 					imgEl.style.objectFit = 'contain';
 					imgEl.style.borderRadius = '8px';
 
-					let imgPath = '';
-					let fallback1 = '';
-					let fallback2 = outputsFallback;
+					// Primary try: relative path (payload.folder + payload.file)
+					const folderPrefix = payload.folder || '';
+					const fileName = payload.file || '';
+					let imgPath = folderPrefix + fileName;
 
-					// Combined logic for Posters/Stickers/Bookmarks
-					if(payload.folder && payload.folder.startsWith('outputs/')) {
-						// Posters: try local, then outputs, then fallback
-						const folderName = decodeURIComponent(payload.folder.replace(/^outputs\//,'').replace(/\/$/,'') || payload.category);
-						const localPath = localBase + folderName + '/' + payload.file;
-						imgPath = 'file:///' + encodeURI(localPath.replace(/\\/g,'/'));
-						fallback1 = payload.folder + payload.file; // outputs/ path
-						fallback2 = outputsFallback;
-						imgEl.onerror = function(){
-							if(this.src !== fallback1) { this.onerror = function(){ if(this.src !== fallback2) { this.onerror = null; this.src = fallback2; } else { this.onerror = null; this.style.display='none'; detailImage.textContent='Image not available'; } }; this.src = fallback1; }
-							else if(this.src !== fallback2) { this.onerror = null; this.src = fallback2; }
-							else { this.onerror = null; this.style.display='none'; detailImage.textContent='Image not available'; }
-						};
-					} else {
-						// Stickers/Bookmarks (and others): try the path from payload (which is correct), then fallback
-						imgPath = (payload.folder || '') + payload.file;
-						fallback1 = outputsFallback;
-						imgEl.onerror = function(){
-							if(this.src !== fallback1) { this.onerror = null; this.src = fallback1; }
-							else { this.onerror = null; this.style.display='none'; detailImage.textContent='Image not available'; }
-						};
+					// If not already a *_full image, prepare a `_full` fallback in the same folder
+					let fallbackFull = '';
+					const m = fileName.match(/^(.*)\.(jpg|jpeg|png)$/i);
+					if(m && !/_full\.(jpg|jpeg|png)$/i.test(fileName)){
+						const base = m[1];
+						const ext = m[2];
+						fallbackFull = folderPrefix + base + '_full.' + ext;
 					}
-					
+
+					const fallbackGeneric = outputsFallback;
+
+					// Chain onerror handlers to try: relative -> _full (if available) -> generic fallback
+					imgEl.onerror = function(){
+						try {
+							if(fallbackFull && this.src !== fallbackFull){
+								this.onerror = function(){
+									if(this.src !== fallbackGeneric){ this.onerror = null; this.src = fallbackGeneric; }
+									else { this.onerror = null; this.style.display='none'; detailImage.textContent='Image not available'; }
+								};
+								this.src = fallbackFull;
+							} else if(this.src !== fallbackGeneric){
+								this.onerror = null; this.src = fallbackGeneric;
+							} else {
+								this.onerror = null; this.style.display='none'; detailImage.textContent='Image not available';
+							}
+						} catch(e) {
+							this.onerror = null; this.style.display='none'; detailImage.textContent='Image not available';
+						}
+					};
+
 					imgEl.src = imgPath;
 					detailImage.appendChild(imgEl);
 				} else {
