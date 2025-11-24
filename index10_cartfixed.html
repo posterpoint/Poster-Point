@@ -225,6 +225,238 @@
 			#cart-sidebar .cart-item{display:flex;align-items:center;gap:10px;padding:10px 6px;border-bottom:1px solid rgba(255,255,255,0.03)}
 			#cart-sidebar .cart-item .ci-name{font-weight:700}
 			#cart-sidebar .cart-summary{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.03)}
+			       /* Tablet/Medium Screens (max-width: 900px) */
+       @media (max-width: 900px) {
+           .app { flex-direction: column; }
+           .sidebar {
+               width: 100vw;
+               max-width: 100vw;
+               left: 0 !important;
+               right: 0 !important;
+               border-radius: 0 0 12px 12px;
+               min-width: unset;
+               box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+               /* FIX: Use Y-transform for mobile/tablet slide-down effect, 
+               and hide by default to fix automatic visibility. */
+               transform: translateY(-100vh) !important;
+               top: 0;
+               bottom: auto; /* Allow content height to dictate size */
+               max-height: 90vh; /* Better mobile UX */
+           }
+           /* NEW: All 'open' sidebars slide down */
+           .sidebar.open {
+               transform: translateY(0) !important;
+           }
+           /* Remove sidebar-right specific overrides for mobile now handled by generic .sidebar */
+           .sidebar.sidebar-right {
+               /* No need for right/left overrides here anymore */
+               right: 0;
+               left: auto;
+           }
+           .main {
+               margin-left: 0;
+               margin-right: 0;
+           }
+           #product-grid, .grid {
+               grid-template-columns: repeat(2, 1fr) !important;
+               gap: 14px;
+           }
+           header.header {
+               flex-wrap: wrap;
+               gap: 8px;
+               padding: 10px 8px;
+           }
+           .logo .title { font-size: 17px; }
+           .logo .sub { font-size: 10px; }
+           .content { padding: 12px; }
+           .card .thumb { height: 200px; }
+           .card { padding: 12px; }
+           .offer-banner { font-size: 15px; padding: 10px 8px; }
+           #cart-sidebar {
+               width: 100vw;
+               right: 0;
+               left: 0;
+               border-radius: 0 0 12px 12px;
+               top: 0; /* Anchor to top */
+               bottom: auto; /* Reset bottom */
+           }
+       }
+
+       /* Mobile Screens (max-width: 640px) */
+       @media (max-width: 640px) {
+           .app { flex-direction: column; }
+           .sidebar {
+               /* Inherits new transform from 900px media query */
+               width: 100vw;
+               max-width: 100vw;
+               left: 0 !important;
+               right: 0 !important;
+               border-radius: 0 0 12px 12px;
+               min-width: unset;
+               box-shadow: 0 6px 30px rgba(0,0,0,0.3);
+               padding: 12px 6px;
+           }
+           /* Remove sidebar-right specific overrides for mobile now handled by generic .sidebar */
+           .sidebar.sidebar-right {
+               right: 0;
+               left: auto;
+           }
+           .main {
+               margin-left: 0;
+               margin-right: 0;
+           }
+           #product-grid, .grid {
+               grid-template-columns: 1fr !important;
+               gap: 10px;
+               margin: 0 2vw;
+               padding: 0;
+           }
+           .card {
+               margin: 0 0 10px 0;
+               padding: 10px;
+           }
+           .card .thumb {
+               height: 140px;
+           }
+           .logo .title { font-size: 15px; }
+           .logo .sub { font-size: 9px; }
+           header.header {
+               flex-wrap: wrap;
+               gap: 6px;
+               padding: 7px 4px;
+           }
+           .content { padding: 6px; }
+           .offer-banner { font-size: 13px; padding: 7px 4px; }
+           #cart-sidebar { width: 100vw; right: 0; left: 0; border-radius: 0 0 12px 12px; padding: 10px 4px; top: 0; bottom: auto; }
+           .sidebar .brand-small, .sidebar .side-head, .sidebar .other-header, .sidebar .other-title {
+               font-size: 13px;
+           }
+           .sidebar .cat-list li a { font-size: 13px; }
+           .sidebar .cat-list li { padding: 6px 2px; }
+           .sidebar .cat-list { gap: 2px; }
+           .sidebar .icon svg { width: 14px; height: 14px; }
+           .testimonial-carousel { padding: 8px; }
+           .testimonial-carousel button { width: 32px; height: 32px; font-size: 12px; }
+           #newsletter-form input { max-width: 100%; }
+           .title.large { font-size: 1.5em; }
+           /* Modal adjustments */
+           #detail-modal > div:nth-child(2) {
+               max-width: 98vw !important;
+               margin: 10vw auto !important;
+               padding: 8px !important;
+           }
+           #detail-modal .thumb, #detail-image { min-height: 120px !important; }
+           #detail-modal h2 { font-size: 1.1em; }
+           #detail-modal p, #detail-modal label, #detail-modal .button { font-size: 13px; }
+           #detail-modal .button { padding: 8px 10px; }
+           #detail-modal [style*="display:flex;gap:20px"] { flex-direction: column !important; gap: 8px !important; }
+           #detail-image, #detail-modal [style*="flex:1;max-width:50%"] { max-width: 100% !important; min-width: 0 !important; }
+       }
+    :root{ --bg:#000; --fg:#fff; --muted:#bbb; --accent:#222; --main-accent:#2b2b2b; --other-accent:#151515; --text:#eaeaea; --accent2:#fff176 }
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:Inter,Segoe UI,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    .app{display:flex;min-height:100vh}
+
+    /* Sidebar (off-canvas left & right) */
+    .sidebar{width:260px;background:var(--accent);padding:20px 16px;box-sizing:border-box;box-shadow:0 6px 30px rgba(0,0,0,0.6);position:fixed;top:0;bottom:0;transform:translateX(-300px);transition:transform .28s ease;z-index:70}
+    .sidebar.open{transform:translateX(0)}
+    .sidebar.sidebar-right{right:0;left:auto;transform:translateX(300px)}
+    .sidebar.sidebar-right.open{transform:translateX(0)}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);opacity:0;visibility:hidden;transition:opacity .2s ease;z-index:65}
+    .overlay.show{opacity:1;visibility:visible}
+
+    /* Mobile cart open indicator (small banner shown when cart opens on phones) */
+    #cart-mobile-indicator{position:fixed;left:12px;right:12px;bottom:18px;background:linear-gradient(90deg,#111,#222);color:var(--fg);padding:10px 14px;border-radius:10px;text-align:center;font-weight:700;z-index:95;display:none;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+    body.cart-open-mobile #cart-mobile-indicator{display:block;animation:cartIndicatorIn .22s ease}
+    @keyframes cartIndicatorIn{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+    /* Sidebars float (overlay) */
+    .main{transition:none}
+    .brand-small{font-weight:700;font-size:14px;margin-bottom:18px;letter-spacing:0.6px}
+    .side-head{font-size:18px;font-weight:700;margin:14px 0 8px}
+    .cat-list{list-style:none;padding:0;margin:0}
+    .cat-list li{padding:8px 6px;border-radius:6px;margin-bottom:6px}
+    .cat-list li a{display:block;padding:6px 8px;border-radius:6px}
+    .cat-list li a:hover{background:rgba(255,255,255,0.03)}
+    /* main (left) sidebar accents */
+    #main-sidebar{border-right:1px solid rgba(255,255,255,0.02)}
+    /* main category buttons: modern, borderless, subtle hover */
+    .head-btn{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:0;color:var(--fg);padding:8px 6px;font-weight:700;font-size:15px;text-align:left;cursor:pointer;border-radius:6px;transition:transform .18s ease, color .18s ease, background .18s ease}
+    .head-btn:focus{outline:2px solid rgba(255,255,255,0.06);outline-offset:2px}
+    .head-btn:hover{transform:translateX(6px);background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:#fff}
+    .head-btn .icon svg{transition:transform .22s ease, stroke .18s ease}
+    .head-btn:hover .icon svg{transform:translateX(2px) rotate(4deg)}
+    /* other (right) sidebar accents */
+    #other-sidebar{border-left:1px solid rgba(255,255,255,0.02)}
+    #other-sidebar .cat-list li a:hover{background:rgba(255,255,255,0.02);color:var(--fg);}
+    .cat-list .icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-right:8px;flex:0 0 18px}
+    .icon svg{width:16px;height:16px;display:block}
+    .icon-main svg{fill:transparent;stroke:var(--fg);stroke-width:1.2}
+    .icon-other svg{fill:var(--muted);stroke:none}
+
+    /* Main content area */
+    .main{flex:1;display:flex;flex-direction:column;margin-left:0}
+    header.header{display:flex;align-items:center;gap:18px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);position:relative;z-index:10}
+
+    /* Header menu button */
+    .menu-btn{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;margin-right:6px}
+    .other-btn{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;margin-right:6px}
+
+    .logo{display:flex;flex-direction:column}
+    .logo .title{font-size:20px;font-weight:800;line-height:1}
+    .logo .sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+    .search-wrap{margin-left:12px;flex:1;max-width:680px}
+    .search{display:flex;align-items:center;background:#0b0b0b;border:1px solid rgba(255,255,255,0.08);padding:8px;border-radius:8px}
+    .search input{flex:1;background:transparent;border:0;color:var(--fg);outline:none;padding:6px 8px;font-size:14px}
+    .search input::placeholder{color:var(--muted)}
+    .search button{background:transparent;border:0;color:var(--muted);cursor:pointer;padding:6px}
+
+    .header-actions{display:flex;align-items:center;gap:12px;margin-left:auto}
+    .header-actions{display:flex;align-items:center;gap:12px;margin-left:auto;position:relative;z-index:90}
+    .cart{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;z-index:91}
+
+    .content{padding:22px;flex:1;overflow:auto}
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+            .card .thumb{height:300px;border-radius:6px;background:linear-gradient(180deg,#111,#0a0a0a);display:flex;align-items:flex-end;justify-content:flex-start;padding:10px;color:var(--muted);font-weight:700}
+        .card .title{font-size:14px;margin:8px 0 12px}
+        .card .actions{display:flex;gap:8px}
+        .button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--fg);padding:8px 10px;border-radius:6px;cursor:pointer}
+        .button.primary{background:var(--fg);color:var(--bg);border-color:transparent}
+        .button:active{transform:translateY(1px)}
+        .card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:18px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);text-align:center;transition:transform 260ms ease}
+        .card:hover{transform:translateY(-6px)}
+        .btn{background:var(--fg);color:var(--bg);border:0;padding:10px 20px;border-radius:8px;cursor:pointer}
+        .btn.ghost{background:transparent;color:var(--fg);border:1px solid rgba(255,255,255,0.06)}
+    .card h4{margin:0 0 8px}
+
+    /* Responsive */
+    @media (max-width:800px){
+        .sidebar{display:block}
+        .search-wrap{max-width:unset}
+    }
+        @media (prefers-reduced-motion:reduce){.sidebar{transition:none}.overlay{transition:none}}
+        /* Right sidebar entrance animations for items */
+        @keyframes itemEnter{
+            from{opacity:0;transform:translateX(10px)}
+            to{opacity:1;transform:translateX(0)}
+        }
+
+
+        /* other sidebar title */
+        .other-header{padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.03);margin-bottom:12px}
+        .other-title{font-size:16px;font-weight:800;color:var(--fg);margin-top:6px}
+        .brand-small{font-size:12px;color:var(--muted);margin:0}
+
+        /* Cart sidebar */
+        #cart-sidebar{width:360px;right:-380px;padding:20px;box-sizing:border-box;z-index:80;border-left:1px solid rgba(255,255,255,0.02);}
+        /* On desktop, cart slides in from right using translateX */
+        #cart-sidebar.open{transform:translateX(-380px)}
+        #cart-sidebar .cart-list{list-style:none;padding:0;margin:0;max-height:50vh;overflow:auto}
+        #cart-sidebar .cart-item{display:flex;align-items:center;gap:10px;padding:10px 6px;border-bottom:1px solid rgba(255,255,255,0.03)}
+        #cart-sidebar .cart-item .ci-name{font-weight:700}
+        #cart-sidebar .cart-summary{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.03)}
+</style>
 	</style>
 </head>
 <body>
@@ -456,6 +688,22 @@
 				deactivateTrap(otherSidebar);
 			}
 
+			// Small helper to show a temporary mobile toast/notice
+			function showMobileToast(msg, duration = 1800){
+				try{
+					let el = document.getElementById('cart-mobile-toast');
+					if(!el){
+						el = document.createElement('div');
+						el.id = 'cart-mobile-toast';
+						el.style.cssText = 'position:fixed;left:12px;right:12px;bottom:18px;background:linear-gradient(90deg,#111,#222);color:var(--fg);padding:10px 14px;border-radius:10px;text-align:center;font-weight:700;z-index:95;box-shadow:0 8px 30px rgba(0,0,0,0.6)';
+						document.body.appendChild(el);
+					}
+					el.textContent = msg;
+					el.style.display = 'block';
+					setTimeout(()=>{ try{ el.style.display = 'none'; }catch(e){} }, duration);
+				}catch(e){/* no-op */}
+			}
+
 			function openCart(){
 				cartSidebar.classList.add('open');
 				cartSidebar.setAttribute('aria-hidden','false');
@@ -669,7 +917,7 @@
 					<div class="card" style="animation: itemEnter 260ms ease forwards ${50 * i}ms; opacity:0; transform:translateY(10px);">
 						${thumbHtml}
 						<div class="title">${baseName}</div>
-						<div style="font-size:18px;font-weight:700">₹${defaultPrice}${sizes.length > 1 ? '+' : ''}</div>
+						<div style="font-size:18px;font-weight:700">₹${defaultPrice}</div>
 						${sizeSelector}
 						<div class="actions">
 							<button class="button"
@@ -1015,7 +1263,12 @@
 					folder: folder,
 					size: size
 				});
-				openCart(); // Open cart automatically
+				// On desktop/tablet open cart automatically; on small phones show a toast instead
+				if(window.innerWidth > 640){
+					openCart();
+				} else {
+					showMobileToast('Added to cart');
+				}
 			}
 			
 			// --- Details Modal Logic ---
@@ -1165,7 +1418,7 @@
 				}
 
 				// Final price display update
-				detailPriceEl.textContent = `₹${currentPrice}${sizes.length > 1 ? '+' : ''}`;
+				detailPriceEl.textContent = `₹${currentPrice}`;
 
 				// Add-to-cart listener
 				detailAddBtn.onclick = function(){
@@ -1181,7 +1434,12 @@
 					const item = {...payload, price: itemPrice, size: size};
 					addToCart(item);
 					closeDetails();
-					openCart();
+					// On small screens avoid forcing the cart open; show toast instead
+					if(window.innerWidth > 640){
+						openCart();
+					} else {
+						showMobileToast('Added to cart');
+					}
 				}
 
 				// Set modal visible and trap focus
@@ -1244,13 +1502,6 @@
 
 			// Cart Button Clicks
 			cartBtn.addEventListener('click', openCart);
-			// Make cart respond to touch on mobile devices
-			if(cartBtn){
-				cartBtn.addEventListener('touchend', function(e){
-					e.preventDefault();
-					openCart();
-				});
-			}
 			document.getElementById('back-to-shop').addEventListener('click', closeCart);
 			document.getElementById('clear-cart').addEventListener('click', ()=>{
 				if(confirm('Are you sure you want to clear your cart?')){
