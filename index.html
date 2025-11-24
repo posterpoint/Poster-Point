@@ -267,7 +267,7 @@
     </section>
   </main>
 
-  <script src="js/app.js"></script>
+  <script src="js/app.js" defer></script>
 
   <!-- Featured Products Script -->
   <script>
@@ -422,14 +422,17 @@
 
         if(!allProducts.length) throw new Error('No images found in manifest');
 
-        // Select up to 4 products whose images actually load (probe candidates). This prevents corrupted images from showing.
-        const sample = [];
-        for(const p of shuffle(allProducts)){
+        // Select up to 4 products whose images actually load (probe candidates).
+        // Probe in parallel (bounded by slice window) to speed up selection and avoid serial waits.
+        const PARALLEL_WINDOW = 60; // probe up to this many products in parallel
+        const candidatePool = shuffle(allProducts).slice(0, PARALLEL_WINDOW);
+        const probePromises = candidatePool.map(p => (async () => {
           const candidates = (p.candidates || [p.image]).map(c => encodeURI(c));
           const working = await findFirstWorking(candidates);
-          if(working){ p.resolvedImage = working; sample.push(p); }
-          if(sample.length >= 4) break;
-        }
+          return working ? Object.assign({}, p, { resolvedImage: working }) : null;
+        })());
+        const probeResults = await Promise.all(probePromises);
+        const sample = (probeResults.filter(Boolean)).slice(0,4);
 
         // Render only validated sample items
         sample.forEach(p => {
@@ -453,6 +456,8 @@
           img.style.maxWidth = '100%';
           img.style.maxHeight = '100%';
           img.style.objectFit = 'contain';
+          img.loading = 'lazy';
+          img.decoding = 'async';
           img.src = p.resolvedImage || encodeURI(p.image || 'assets/logo-48.png');
           thumb.appendChild(img);
 
@@ -494,6 +499,8 @@
           img.style.maxWidth = '100%';
           img.style.maxHeight = '100%';
           img.style.objectFit = 'contain';
+          img.loading = 'lazy';
+          img.decoding = 'async';
           img.onerror = function(){ this.src = 'assets/logo-48.png'; };
           thumb.appendChild(img);
           const body = document.createElement('div');
@@ -513,6 +520,12 @@
       document.addEventListener('DOMContentLoaded', loadFeaturedProducts);
     } else {
       loadFeaturedProducts();
+    }
+    // Register a simple service worker for caching static assets and images
+    if ('serviceWorker' in navigator) {
+      try {
+        navigator.serviceWorker.register('./sw.js').catch(()=>{});
+      } catch(e) { /* ignore */ }
     }
   </script>
 

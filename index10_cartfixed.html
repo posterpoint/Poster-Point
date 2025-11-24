@@ -935,9 +935,9 @@
 				   }
 				// If we already resolved a working src, don't attach onerror chaining; otherwise fall back as before
 				if(resolvedSrc){
-					thumbHtml = `<div class="thumb"><img src="${thumbSrc}" alt="${label} ${i+1}" style="${imgStyle}"></div>`;
+					thumbHtml = `<div class="thumb"><img src="${thumbSrc}" alt="${label} ${i+1}" loading="lazy" decoding="async" style="${imgStyle}"></div>`;
 				} else {
-					thumbHtml = `<div class="thumb"><img src="${thumbSrc}" alt="${label} ${i+1}" style="${imgStyle}" onerror="if('${fallbackSrc}' && this.src !== '${fallbackSrc}') { this.onerror = null; this.src = '${fallbackSrc}'; } else if(this.src !== '${outputsFallback}') { this.onerror = null; this.src = '${outputsFallback}'; } else { this.style.display='none';this.parentElement.textContent='Image not available'; }"></div>`;
+					thumbHtml = `<div class="thumb"><img src="${thumbSrc}" alt="${label} ${i+1}" loading="lazy" decoding="async" style="${imgStyle}" onerror="if('${fallbackSrc}' && this.src !== '${fallbackSrc}') { this.onerror = null; this.src = '${fallbackSrc}'; } else if(this.src !== '${outputsFallback}') { this.onerror = null; this.src = '${outputsFallback}'; } else { this.style.display='none';this.parentElement.textContent='Image not available'; }"></div>`;
 				}
 
 				return `
@@ -997,18 +997,15 @@
 					return;
 				}
 
-				// Prepare candidates for each file and probe them; only render files with at least one working image
-				const validated = [];
-				for(let i=0;i<files.length;i++){
-					const file = files[i];
-					// Build candidates similar to earlier logic
+				// Prepare probe tasks for files and run them in parallel (bounded). This reduces the overall wall-clock time vs serial probing.
+				const PROBE_WINDOW = Math.min(files.length, 200); // limit number concurrently probed
+				const probeTasks = files.slice(0, PROBE_WINDOW).map(file => (async () => {
 					const m = (file || '').match(/^(.*)\.(jpg|jpeg|png|webp|gif)$/i);
-					if(!m) continue;
+					if(!m) return null;
 					const base = m[1];
 					const ext = m[2];
 					let candidates = [];
 					if(label.toLowerCase().includes('bookmark')){
-						// map BM-### to BOO-###_full.jpg in outputs/BOOKMARK
 						const match = file.match(/^BM-(\d+)\.(jpg|jpeg|png)$/i);
 						if(match){
 							const num = match[1].padStart(3,'0');
@@ -1021,17 +1018,15 @@
 					} else {
 						candidates.push(folderHref + file);
 					}
-
-					// Probe candidates and pick the first working one
 					try{
 						const resolved = await findFirstWorking(candidates.map(c=>encodeURI(c)));
-						if(resolved){
-							validated.push({ file, resolvedSrc: resolved });
-						}
+						if(resolved) return { file, resolvedSrc: resolved };
 					} catch(e){ /* ignore */ }
-					// Stop early if too many items (avoid long waits): keep first 200 discovered
-					if(validated.length > 200) break;
-				}
+					return null;
+				})());
+
+				const probeResults = await Promise.all(probeTasks);
+				const validated = probeResults.filter(Boolean).slice(0,200);
 
 				if(!validated.length){
 					catalogGrid.innerHTML = `<p style="color:var(--muted);text-align:center;padding:40px;">No valid images found for "${label}".</p>`;
@@ -1446,6 +1441,9 @@
 						}
 					};
 
+					// Performance: prefer eager decoding for modal images so they show quickly when opened
+					imgEl.loading = 'eager';
+					imgEl.decoding = 'async';
 					imgEl.src = imgPath;
 					detailImage.appendChild(imgEl);
 				} else {
