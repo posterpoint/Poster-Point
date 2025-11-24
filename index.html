@@ -381,7 +381,14 @@
           thumb.style.background = '#f9f9f9';
           var img = document.createElement('img');
           img.alt = p.name || p.id;
-          img.src = 'dist/' + p.image.replace(/^\/?/, '');
+          // Build a forgiving image path: if p.image already looks absolute or starts with dist/, keep it.
+          var imgPath = (p.image || '').toString();
+          if(!/^(https?:|\/|\.\/|dist\/)/i.test(imgPath)){
+            imgPath = './dist/' + imgPath.replace(/^\/?/, '');
+          }
+          // If the manifest used a leading slash, make it relative
+          imgPath = imgPath.replace(/^\//, './');
+          img.src = imgPath;
           img.style.maxWidth = '100%';
           img.style.maxHeight = '100%';
           img.style.objectFit = 'contain';
@@ -405,12 +412,50 @@
         });
       } catch (err) {
         console.error('Featured load error:', err);
-        var fallback = document.createElement('div');
-        fallback.className = 'card';
-        fallback.style.padding = '24px';
-        fallback.style.color = 'red';
-        fallback.textContent = 'Featured products currently unavailable. ' + (err && err.message ? err.message : '');
-        container.appendChild(fallback);
+        console.warn('Falling back to built-in featured products');
+        // Minimal fallback - use a few known output images that exist in the repo
+        var fallbackProducts = [
+          { id: 'AE-045', name: 'Aesthetics Poster AE-045', image: 'outputs/AESTHETICS/AE-045_full.jpg', price: 199, category: 'Posters' },
+          { id: 'AE-046', name: 'Aesthetics Poster AE-046', image: 'outputs/AESTHETICS/AE-046_full.jpg', price: 199, category: 'Posters' },
+          { id: 'AE-047', name: 'Aesthetics Poster AE-047', image: 'outputs/AESTHETICS/AE-047_full.jpg', price: 199, category: 'Posters' },
+          { id: 'AE-048', name: 'Aesthetics Poster AE-048', image: 'outputs/AESTHETICS/AE-048_full.jpg', price: 199, category: 'Posters' }
+        ];
+        // Render fallback products
+        fallbackProducts.slice(0,4).forEach(function(p){
+          var card = document.createElement('div');
+          card.className = 'card';
+          card.style.display = 'flex';
+          card.style.flexDirection = 'column';
+          card.style.overflow = 'visible';
+          card.style.alignItems = 'center';
+          var thumb = document.createElement('div');
+          thumb.className = 'thumb';
+          thumb.style.display = 'flex';
+          thumb.style.alignItems = 'center';
+          thumb.style.justifyContent = 'center';
+          thumb.style.height = '320px';
+          thumb.style.width = '100%';
+          thumb.style.background = '#f9f9f9';
+          var img = document.createElement('img');
+          img.alt = p.name || p.id;
+          img.src = p.image;
+          img.style.maxWidth = '100%';
+          img.style.maxHeight = '100%';
+          img.style.objectFit = 'contain';
+          img.style.objectPosition = 'center';
+          img.style.backgroundColor = 'transparent';
+          img.onerror = function(){ this.src = 'assets/logo-48.png'; this.style.objectFit = 'contain'; };
+          thumb.appendChild(img);
+          var body = document.createElement('div');
+          body.className = 'card-body';
+          var priceText = (typeof p.price === 'number') ? ('₹' + p.price) : '';
+          body.innerHTML = '<div class="product-name">' + (p.name || p.id) + '</div>' +
+                           '<div class="product-price">' + priceText + '</div>' +
+                           '<div class="muted">' + (p.category || '') + '</div>';
+          card.appendChild(thumb);
+          card.appendChild(body);
+          container.appendChild(card);
+        });
       }
     };
 
