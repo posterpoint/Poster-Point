@@ -769,6 +769,28 @@
 				return list;
 			}
 
+			// Image probing helper: returns first working candidate URL or null
+			function testImage(url){
+				return new Promise(resolve => {
+					try{
+						const img = new Image();
+						img.onload = () => resolve(true);
+						img.onerror = () => resolve(false);
+						img.src = url;
+					} catch(e){ resolve(false); }
+				});
+			}
+
+			async function findFirstWorking(candidates){
+				for(const c of candidates){
+					try{
+						const ok = await testImage(c);
+						if(ok) return c;
+					} catch(e){ /* ignore */ }
+				}
+				return null;
+			}
+
 
 						// --- Manifest-based fileMap ---
 						let fileMap = {};
@@ -824,7 +846,7 @@
 			const posterSizes = ['A4','A3','A5','A6','Pocket'];
 			const stickerSizes = ['Single','Fullpage'];
 
-			function renderCard(file, folderHref, label, i){
+			function renderCard(file, folderHref, label, i, resolvedSrc){
 				const baseName = file.replace(/(_full)?\.(jpg|jpeg|png)$/i, '');
 				const folderName = decodeURIComponent(folderHref.replace(/^outputs\//, '').replace(/\/$/, ''));
 				let category = label;
@@ -869,7 +891,7 @@
 
 				// Improved image fallback for posters: try *_full.jpg if manifest file is missing
 				let thumbHtml = '';
-				let thumbSrc = folderHref + file;
+				let thumbSrc = resolvedSrc || (folderHref + file);
 				let fallbackSrc = '';
 				// If we have a manifest (fileMap) prefer the _full variant to avoid initial 404s
 				try {
@@ -911,7 +933,12 @@
 				   } else if(label.toLowerCase().includes('bookmark')) {
 					   imgStyle = "width:100%;height:100%;object-fit:contain;border-radius:6px;display:block;margin:0 auto;";
 				   }
-				thumbHtml = `<div class="thumb"><img src="${thumbSrc}" alt="${label} ${i+1}" style="${imgStyle}" onerror="if('${fallbackSrc}' && this.src !== '${fallbackSrc}') { this.onerror = null; this.src = '${fallbackSrc}'; } else if(this.src !== '${outputsFallback}') { this.onerror = null; this.src = '${outputsFallback}'; } else { this.style.display='none';this.parentElement.textContent='Image not available'; }"></div>`;
+				// If we already resolved a working src, don't attach onerror chaining; otherwise fall back as before
+				if(resolvedSrc){
+					thumbHtml = `<div class="thumb"><img src="${thumbSrc}" alt="${label} ${i+1}" style="${imgStyle}"></div>`;
+				} else {
+					thumbHtml = `<div class="thumb"><img src="${thumbSrc}" alt="${label} ${i+1}" style="${imgStyle}" onerror="if('${fallbackSrc}' && this.src !== '${fallbackSrc}') { this.onerror = null; this.src = '${fallbackSrc}'; } else if(this.src !== '${outputsFallback}') { this.onerror = null; this.src = '${outputsFallback}'; } else { this.style.display='none';this.parentElement.textContent='Image not available'; }"></div>`;
+				}
 
 				return `
 					<div class="card" style="animation: itemEnter 260ms ease forwards ${50 * i}ms; opacity:0; transform:translateY(10px);">
@@ -945,7 +972,7 @@
 				`;
 			}
 
-			function renderCatalog(folderOrKey, label){
+				async function renderCatalog(folderOrKey, label){
 				catalogGrid.innerHTML = '';
 				let files = [];
 				let folderHref = folderOrKey;
@@ -970,31 +997,83 @@
 					return;
 				}
 
-				// Filter out corrupted images for bookmarks and posters
-				let filteredFiles = files;
-				if(label.toLowerCase().includes('bookmark')) {
-					// For bookmarks, only include files that have a corresponding outputs/BOOKMARK/BOO-###_full.jpg
-					filteredFiles = files.filter(file => {
+				// Prepare candidates for each file and probe them; only render files with at least one working image
+				const validated = [];
+				for(let i=0;i<files.length;i++){
+					const file = files[i];
+					// Build candidates similar to earlier logic
+					const m = (file || '').match(/^(.*)\.(jpg|jpeg|png|webp|gif)$/i);
+					if(!m) continue;
+					const base = m[1];
+					const ext = m[2];
+					let candidates = [];
+					if(label.toLowerCase().includes('bookmark')){
+						// map BM-### to BOO-###_full.jpg in outputs/BOOKMARK
 						const match = file.match(/^BM-(\d+)\.(jpg|jpeg|png)$/i);
-						if(match) {
-							const num = match[1].padStart(3, '0');
-							const outputName = `BOO-${num}_full.jpg`;
-							// Check if the file exists in outputs/BOOKMARK/ (from directory listing)
-							return window.bookmarkOutputFiles && window.bookmarkOutputFiles.includes(outputName);
+						if(match){
+							const num = match[1].padStart(3,'0');
+							candidates.push('outputs/BOOKMARK/BOO-' + num + '_full.jpg');
+							candidates.push('outputs/BOOKMARK/BOO-' + num + '.jpg');
 						}
-						return false;
-					});
+					} else if(folderHref.startsWith('outputs/')){
+						candidates.push(folderHref + base + '_full.' + ext);
+						candidates.push(folderHref + file);
+					} else {
+						candidates.push(folderHref + file);
+					}
+
+					// Probe candidates and pick the first working one
+					try{
+						const resolved = await findFirstWorking(candidates.map(c=>encodeURI(c)));
+						if(resolved){
+							validated.push({ file, resolvedSrc: resolved });
+						}
+					} catch(e){ /* ignore */ }
+					// Stop early if too many items (avoid long waits): keep first 200 discovered
+					if(validated.length > 200) break;
 				}
-				// For posters, you could add similar logic if needed
-				catalogGrid.innerHTML = filteredFiles.map((file, i) => renderCard(file, folderHref, label, i)).join('');
+
+				if(!validated.length){
+					catalogGrid.innerHTML = `<p style="color:var(--muted);text-align:center;padding:40px;">No valid images found for "${label}".</p>`;
+					return;
+				}
+
+				catalogGrid.innerHTML = validated.map((entry, i) => renderCard(entry.file, folderHref, label, i, entry.resolvedSrc)).join('');
 
 				// Reattach event listeners to the newly rendered buttons (especially for the details button)
 				attachCardListeners();
 			}
 
 
-			// Initial render: wait for manifest, then render
+			// Initial render: wait for manifest, then render.
+			// If `category` query param is present, use it to show the requested category.
 			loadManifest(() => {
+				try{
+					const params = new URLSearchParams(window.location.search);
+					const catQ = (params.get('category') || '').trim();
+					if(catQ){
+						const cat = catQ.toLowerCase();
+						if(cat.includes('bookmark')){
+							// Show bookmarks (manifest key: BOOKMARK)
+							renderCatalog('images/PINTEREST%20IMAGES/BOOKMARK/', 'BOOKMARK');
+							return;
+						}
+						if(cat.includes('sticker')){
+							// Default to single stickers when user clicks Stickers from index
+							renderCatalog('images/PINTEREST%20IMAGES/SINGLE%20STICKERS/', 'SINGLE STICKERS');
+							return;
+						}
+						// If the param looks like a manifest folder name, try to use it directly
+						// e.g., ?category=AESTHETICS or ?category=MOVIE%20POSTERS
+						const lookup = catQ.toUpperCase();
+						if(fileMap && fileMap[lookup]){
+							// render from outputs folder if present
+							renderCatalog('outputs/' + lookup + '/', lookup);
+							return;
+						}
+					}
+				} catch(e){ /* ignore param parsing errors and fall back to default */ }
+				// Default landing catalog
 				renderCatalog('outputs/AESTHETICS/', 'AESTHETICS');
 			});
 
