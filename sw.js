@@ -6,7 +6,8 @@ const ASSETS = [
   '/assets/logo-48.png',
   '/assets/logo-96.png',
   '/output-fallback.jpg',
-  '/js/app.js'
+  '/js/app.index.js',
+  '/js/app.shop.js'
 ];
 
 self.addEventListener('install', event => {

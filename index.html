@@ -34,7 +34,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
   <title>Poster Point — Home</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.index.css">
   <link rel="icon" href="assets/logo-48.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-180.png">
 </head>
@@ -267,7 +267,7 @@
     </section>
   </main>
 
-  <script src="js/app.js" defer></script>
+  <script src="js/app.index.js" defer></script>
 
   <!-- Featured Products Script -->
   <script>
@@ -389,12 +389,17 @@
         return null;
       }
 
-      // Small local index for outputs folder (helps when manifest names differ from outputs filenames)
-      const outputsIndex = {
-        "BOOKMARK": [
-          "BOO-001_full.jpg","BOO-001_full.json","BOO-004_full.jpg","BOO-004_full.json","BOO-007_full.jpg","BOO-007_full.json","BOO-010_full.jpg","BOO-010_full.json","BOO-013_full.jpg","BOO-013_full.json","BOO-016_full.jpg","BOO-016_full.json","BOO-019_full.jpg","BOO-019_full.json","BOO-022_full.jpg","BOO-022_full.json","BOO-025_full.jpg","BOO-025_full.json","BOO-028_full.jpg","BOO-028_full.json","BOO-031_full.jpg","BOO-031_full.json","BOO-034_full.jpg","BOO-034_full.json","BOO-037_full.jpg","BOO-037_full.json","BOO-040_full.jpg","BOO-040_full.json","BOO-043_full.jpg","BOO-043_full.json","BOO-046_full.jpg","BOO-046_full.json","BOO-049_full.jpg","BOO-049_full.json","BOO-052_full.jpg","BOO-052_full.json","BOO-055_full.jpg","BOO-055_full.json","BOO-058_full.jpg","BOO-058_full.json","BOO-061_full.jpg","BOO-061_full.json","BOO-064_full.jpg","BOO-064_full.json","BOO-067_full.jpg","BOO-067_full.json","BOO-070_full.jpg","BOO-070_full.json","BOO-073_full.jpg","BOO-073_full.json","BOO-076_full.jpg","BOO-076_full.json","BOO-079_full.jpg","BOO-079_full.json","BOO-082_full.jpg","BOO-082_full.json","BOO-085_full.jpg","BOO-085_full.json","BOO-089_full.jpg","BOO-089_full.json","BOO-093_full.jpg","BOO-093_full.json","BOO-097_full.jpg","BOO-097_full.json","BOO-101_full.jpg","BOO-101_full.json","BOO-105_full.jpg","BOO-105_full.json","BOO-109_full.jpg","BOO-109_full.json","BOO-112_full.jpg","BOO-112_full.json","BOO-116_full.jpg","BOO-116_full.json","BOO-120_full.jpg","BOO-120_full.json","BOO-124_full.jpg","BOO-124_full.json","BOO-128_full.jpg","BOO-128_full.json","BOO-132_full.jpg","BOO-132_full.json","BOO-136_full.jpg","BOO-136_full.json","BOO-140_full.jpg","BOO-140_full.json","BOO-144_full.jpg","BOO-144_full.json","BOO-148_full.jpg","BOO-148_full.json","BOO-152_full.jpg","BOO-152_full.json","BOO-155_full.jpg","BOO-155_full.json","BOO-159_full.jpg","BOO-159_full.json","BOO-163_full.jpg","BOO-163_full.json","BOO-167_full.jpg","BOO-167_full.json","BOO-171_full.jpg","BOO-171_full.json","BOO-175_full.jpg","BOO-175_full.json","BOO-179_full.jpg","BOO-179_full.json","BOO-183_full.jpg","BOO-183_full.json","BOO-187_full.jpg","BOO-187_full.json","BOO-191_full.jpg","BOO-191_full.json","BOO-195_full.jpg","BOO-195_full.json","BOO-198_full.jpg","BOO-198_full.json","BOO-202_full.jpg","BOO-202_full.json","BOO-206_full.jpg","BOO-206_full.json","BOO-210_full.jpg","BOO-210_full.json","BOO-214_full.jpg","BOO-214_full.json","BOO-218_full.jpg","BOO-218_full.json","BOO-222_full.jpg","BOO-222_full.json","BOO-226_full.jpg","BOO-226_full.json","BOO-230_full.jpg","BOO-230_full.json","BOO-234_full.jpg","BOO-234_full.json","BOO-238_full.jpg","BOO-238_full.json","BOO-241_full.jpg","BOO-241_full.json","BOO-245_full.jpg","BOO-245_full.json","BOO-249_full.jpg","BOO-249_full.json","BOO-253_full.jpg","BOO-253_full.json","BOO-257_full.jpg","BOO-257_full.json","BOO-261_full.jpg","BOO-261_full.json","BOO-265_full.jpg","BOO-265_full.json","BOO-269_full.json","BOO-272_full.json","BOO-275_full.jpg","BOO-275_full.json","BOO-278_full.jpg","BOO-278_full.json","BOO-281_full.jpg","BOO-281_full.json","BOO-284_full.jpg","BOO-284_full.json","BOO-287_full.jpg","BOO-287_full.json","BOO-290_full.jpg","BOO-290_full.json","BOO-293_full.jpg","BOO-293_full.json","BOO-296_full.jpg","BOO-296_full.json","BOO-299_full.jpg","BOO-299_full.json","BOO-302_full.jpg","BOO-302_full.json","BOO-305_full.jpg","BOO-305_full.json","BOO-308_full.jpg","BOO-308_full.json","BOO-311_full.jpg","BOO-311_full.json","BOO-314_full.jpg","BOO-314_full.json","BOO-317_full.jpg","BOO-317_full.json","BOO-320_full.jpg","BOO-320_full.json","BOO-323_full.jpg","BOO-323_full.json","BOO-326_full.jpg","BOO-326_full.json","BOO-329_full.jpg","BOO-329_full.json","BOO-332_full.jpg","BOO-332_full.json","BOO-335_full.jpg","BOO-335_full.json","BOO-338_full.jpg","BOO-338_full.json","BOO-341_full.jpg","BOO-341_full.json","BOO-344_full.jpg","BOO-344_full.json","BOO-347_full.jpg","BOO-347_full.json","BOO-350_full.jpg","BOO-350_full.json","BOO-353_full.jpg","BOO-353_full.json","BOO-356_full.jpg","BOO-356_full.json","BOO-359_full.jpg","BOO-359_full.json","BOO-362_full.jpg","BOO-362_full.json","BOO-365_full.jpg","BOO-365_full.json","BOO-368_full.jpg","BOO-368_full.json","BOO-371_full.jpg","BOO-371_full.json","BOO-374_full.jpg","BOO-374_full.json","BOO-377_full.jpg","BOO-377_full.json","BOO-380_full.jpg","BOO-380_full.json","BOO-383_full.jpg","BOO-383_full.json","BOO-386_full.jpg","BOO-386_full.json","BOO-389_full.jpg","BOO-389_full.json","BOO-392_full.jpg","BOO-392_full.json","BOO-395_full.jpg","BOO-395_full.json","BOO-398_full.jpg","BOO-398_full.json","BOO-401_full.jpg","BOO-401_full.json","BOO-404_full.jpg","BOO-404_full.json","BOO-407_full.jpg","BOO-407_full.json","BOO-410_full.jpg","BOO-410_full.json","BOO-413_full.jpg","BOO-413_full.json","BOO-416_full.jpg","BOO-416_full.json","BOO-419_full.jpg","BOO-419_full.json","BOO-422_full.jpg","BOO-422_full.json","BOO-425_full.jpg","BOO-425_full.json","BOO-428_full.jpg","BOO-428_full.json","BOO-431_full.jpg","BOO-431_full.json","BOO-434_full.jpg","BOO-434_full.json","BOO-437_full.jpg","BOO-437_full.json","BOO-440_full.jpg","BOO-440_full.json","BOO-443_full.jpg","BOO-443_full.json","BOO-446_full.jpg","BOO-446_full.json","BOO-449_full.jpg","BOO-449_full.json","BOO-452_full.jpg","BOO-452_full.json","BOO-455_full.jpg","BOO-455_full.json","BOO-458_full.jpg","BOO-458_full.json","BOO-461_full.jpg","BOO-461_full.json","BOO-464_full.jpg","BOO-464_full.json","BOO-467_full.jpg","BOO-467_full.json","BOO-470_full.jpg","BOO-470_full.json","BOO-473_full.jpg","BOO-473_full.json","BOO-476_full.jpg","BOO-476_full.json","BOO-479_full.jpg","BOO-479_full.json","BOO-482_full.jpg","BOO-482_full.json","BOO-485_full.jpg","BOO-485_full.json","BOO-488_full.jpg","BOO-488_full.json","BOO-491_full.jpg","BOO-491_full.json","BOO-494_full.jpg","BOO-494_full.json","BOO-497_full.jpg","BOO-497_full.json","BOO-500_full.jpg","BOO-500_full.json","BOO-503_full.jpg","BOO-503_full.json","BOO-506_full.jpg","BOO-506_full.json","BOO-509_full.jpg","BOO-509_full.json","BOO-512_full.jpg","BOO-512_full.json","BOO-515_full.jpg","BOO-515_full.json","BOO-518_full.jpg","BOO-518_full.json","BOO-521_full.jpg","BOO-521_full.json","BOO-524_full.jpg","BOO-524_full.json","BOO-527_full.jpg","BOO-527_full.json","BOO-530_full.jpg","BOO-530_full.json","BOO-533_full.jpg","BOO-533_full.json","BOO-536_full.jpg","BOO-536_full.json","BOO-539_full.jpg","BOO-539_full.json","BOO-542_full.jpg","BOO-542_full.json","BOO-545_full.jpg","BOO-545_full.json","BOO-548_full.jpg","BOO-548_full.json","BOO-551_full.jpg","BOO-551_full.json","BOO-554_full.jpg","BOO-554_full.json","BOO-557_full.jpg","BOO-557_full.json","BOO-560_full.jpg","BOO-560_full.json","BOO-563_full.jpg","BOO-563_full.json","BOO-566_full.jpg","BOO-566_full.json","BOO-569_full.jpg","BOO-569_full.json","BOO-572_full.jpg","BOO-572_full.json","BOO-575_full.jpg","BOO-575_full.json","BOO-578_full.jpg","BOO-578_full.json","BOO-581_full.jpg","BOO-581_full.json","BOO-584_full.jpg","BOO-584_full.json","BOO-587_full.jpg","BOO-587_full.json","BOO-590_full.jpg","BOO-590_full.json","BOO-593_full.jpg","BOO-593_full.json","BOO-596_full.jpg","BOO-596_full.json","BOO-599_full.jpg","BOO-599_full.json","BOO-602_full.jpg","BOO-602_full.json","BOO-605_full.jpg","BOO-605_full.json","BOO-608_full.jpg","BOO-608_full.json","BOO-611_full.jpg","BOO-611_full.json","BOO-614_full.jpg","BOO-614_full.json","BOO-617_full.jpg","BOO-617_full.json","BOO-620_full.jpg","BOO-620_full.json","BOO-623_full.jpg","BOO-623_full.json","BOO-626_full.jpg","BOO-626_full.json","BOO-629_full.jpg","BOO-629_full.json","BOO-632_full.jpg","BOO-632_full.json","BOO-635_full.jpg","BOO-635_full.json","BOO-638_full.jpg","BOO-638_full.json","BOO-641_full.jpg","BOO-641_full.json","BOO-644_full.jpg","BOO-644_full.json","BOO-647_full.jpg","BOO-647_full.json","BOO-650_full.jpg","BOO-650_full.json","BOO-653_full.jpg","BOO-653_full.json","BOO-656_full.jpg","BOO-656_full.json","BOO-659_full.jpg","BOO-659_full.json","BOO-662_full.jpg","BOO-662_full.json","BOO-665_full.jpg","BOO-665_full.json","BOO-668_full.jpg","BOO-668_full.json","BOO-671_full.jpg","BOO-671_full.json","BOO-674_full.jpg","BOO-674_full.json","BOO-677_full.jpg","BOO-677_full.json","BOO-680_full.jpg","BOO-680_full.json","BOO-683_full.jpg","BOO-683_full.json","BOO-686_full.jpg","BOO-686_full.json","BOO-689_full.jpg","BOO-689_full.json","BOO-692_full.jpg","BOO-692_full.json","BOO-695_full.jpg","BOO-695_full.json","BOO-698_full.jpg","BOO-698_full.json","BOO-701_full.jpg","BOO-701_full.json","BOO-704_full.jpg","BOO-704_full.json","BOO-707_full.jpg","BOO-707_full.json","BOO-710_full.jpg","BOO-710_full.json","BOO-713_full.jpg","BOO-713_full.json","BOO-716_full.jpg","BOO-716_full.json","BOO-719_full.jpg","BOO-719_full.json","BOO-722_full.jpg","BOO-722_full.json","BOO-725_full.jpg","BOO-725_full.json","BOO-728_full.jpg","BOO-728_full.json","BOO-731_full.jpg","BOO-731_full.json","BOO-734_full.jpg","BOO-734_full.json","BOO-737_full.jpg","BOO-737_full.json","BOO-740_full.jpg","BOO-740_full.json","BOO-743_full.jpg","BOO-743_full.json","BOO-746_full.jpg","BOO-746_full.json","BOO-749_full.jpg","BOO-749_full.json","BOO-752_full.jpg","BOO-752_full.json"
-        ]
-      };
+      const outputsIndexFallback = {};
+
+      // Attempt to load build-time outputs index; fall back to the embedded small index if missing
+      let outputsIndex = outputsIndexFallback;
+      try{
+        const oiResp = await fetch('./outputsIndex.json', {cache:'no-store'});
+        if(oiResp && oiResp.ok){
+          const oi = await oiResp.json();
+          if(oi && typeof oi === 'object') outputsIndex = oi;
+        }
+      } catch(e) { /* ignore and use fallback */ }
 
       try{
         const resp = await fetch('./images/manifest.json', {cache:'no-store'});
@@ -423,10 +428,35 @@
         if(!allProducts.length) throw new Error('No images found in manifest');
 
         // Select up to 4 products whose images actually load (probe candidates).
+        // Prefer direct lookup via build-time `outputsIndex` to avoid network probes.
         // Probe in parallel (bounded by slice window) to speed up selection and avoid serial waits.
         const PARALLEL_WINDOW = 60; // probe up to this many products in parallel
         const candidatePool = shuffle(allProducts).slice(0, PARALLEL_WINDOW);
+
+        function findOutputFile(folderKey, base, ext){
+          if(!outputsIndex) return null;
+          const keyVariants = [folderKey, folderKey && folderKey.toUpperCase(), folderKey && folderKey.replace(/%20/g,' '), folderKey && decodeURIComponent(folderKey)];
+          for(const k of keyVariants){
+            if(!k) continue;
+            const arr = outputsIndex[k];
+            if(!arr) continue;
+            const cand1 = base + '_full.' + ext;
+            const cand2 = base + '.' + ext;
+            if(arr.includes(cand1)) return './outputs/' + k + '/' + cand1;
+            if(arr.includes(cand2)) return './outputs/' + k + '/' + cand2;
+            const found = arr.find(x => x.toLowerCase().startsWith(base.toLowerCase()));
+            if(found) return './outputs/' + k + '/' + found;
+          }
+          return null;
+        }
+
         const probePromises = candidatePool.map(p => (async () => {
+          const m = (p.originalFilename || '').match(/^(.*)\.(jpg|jpeg|png|webp|gif)$/i);
+          const base = m ? m[1] : p.id;
+          const ext = m ? m[2] : 'jpg';
+          const folderKey = p.category;
+          const direct = findOutputFile(folderKey, base, ext);
+          if(direct) return Object.assign({}, p, { resolvedImage: encodeURI(direct) });
           const candidates = (p.candidates || [p.image]).map(c => encodeURI(c));
           const working = await findFirstWorking(candidates);
           return working ? Object.assign({}, p, { resolvedImage: working }) : null;
