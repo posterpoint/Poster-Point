@@ -178,7 +178,8 @@
 		.search button{background:transparent;border:0;color:var(--muted);cursor:pointer;padding:6px}
 
 		.header-actions{display:flex;align-items:center;gap:12px;margin-left:auto}
-		.cart{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer}
+		.header-actions{display:flex;align-items:center;gap:12px;margin-left:auto;position:relative;z-index:90}
+		.cart{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;z-index:91}
 
 		.content{padding:22px;flex:1;overflow:auto}
 			.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
@@ -1207,6 +1208,13 @@
 
 			// Cart Button Clicks
 			cartBtn.addEventListener('click', openCart);
+			// Make cart respond to touch on mobile devices
+			if(cartBtn){
+				cartBtn.addEventListener('touchend', function(e){
+					e.preventDefault();
+					openCart();
+				});
+			}
 			document.getElementById('back-to-shop').addEventListener('click', closeCart);
 			document.getElementById('clear-cart').addEventListener('click', ()=>{
 				if(confirm('Are you sure you want to clear your cart?')){
