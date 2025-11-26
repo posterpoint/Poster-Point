@@ -201,39 +201,9 @@
       <div style="width:100%;max-width:1000px;">
         <h2 id="welcome-heading" class="welcome-heading" aria-hidden="false"></h2><span id="welcome-cursor" class="welcome-cursor" aria-hidden="true"></span>
       </div>
-      <!-- Firefly opening video -->
-      <video id="main-hero-video" width="1000" height="360" style="width:100%;height:auto;max-width:1000px;display:block;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.08);margin-bottom:15px;border:4px solid #000000" autoplay loop muted playsinline preload="auto">
-        <source src="assets/Firefly Scene__Time__Action - Dialogue__Visuals__Music - Sound__1__0-00 - 0-05__TITLE CARD-OPENING S.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-      <script>
-        // Ensure video reloads and never shows download prompt
-        const heroVideo = document.getElementById('main-hero-video');
-        if(heroVideo) {
-          heroVideo.removeAttribute('controls');
-          heroVideo.addEventListener('error', function() {
-            // fallback: hide video if it fails to load
-            heroVideo.style.display = 'none';
-          });
-        }
-      </script>
+      <!-- Hero canvas animation and download link -->
       <canvas id="hero-canvas" width="1000" height="360" style="width:100%;height:auto;max-width:1000px;display:none;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.08);border:4px solid #000000"></canvas>
       <a id="download-link" style="display:none" tabindex="-1" aria-hidden="true"></a>
-      <!-- Second Firefly video -->
-      <video id="main-hero-video-2" width="1000" height="360" style="width:100%;height:auto;max-width:1000px;display:block;border-radius:12px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.08);margin-top:15px;border:4px solid #000000" autoplay loop muted playsinline preload="auto">
-        <source src="assets/firefly-vertical.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-      <script>
-        // Ensure second video reloads and never shows download prompt
-        const heroVideo2 = document.getElementById('main-hero-video-2');
-        if(heroVideo2) {
-          heroVideo2.removeAttribute('controls');
-          heroVideo2.addEventListener('error', function() {
-            heroVideo2.style.display = 'none';
-          });
-        }
-      </script>
     </section>
 
     <!-- CTA Banner -->
