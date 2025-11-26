@@ -1,0 +1,5 @@
+# Wasmer static site config
+# This tells Wasmer to serve your site from index.html in the root
+static:
+  public: .
+  entrypoint: index.html
