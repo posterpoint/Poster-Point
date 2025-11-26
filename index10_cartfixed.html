@@ -847,6 +847,19 @@
 			const posterSizes = ['A4','A3','A5','A6','Pocket'];
 			const stickerSizes = ['Single','Fullpage'];
 
+			// Helpers: robust detection for sticker categories (labels may be plural or folder-based)
+			function isSingleSticker(label, folderHref){
+				const L = (label||'').toLowerCase();
+				const F = (folderHref||'').toLowerCase();
+				return (L.includes('single') && L.includes('stick')) || L.includes('single sticker') || L.includes('single stickers') || F.includes('single');
+			}
+
+			function isFullpageSticker(label, folderHref){
+				const L = (label||'').toLowerCase();
+				const F = (folderHref||'').toLowerCase();
+				return L.includes('fullpage') || L.includes('full-page') || L.includes('full page') || L.includes('fullpage sticker') || L.includes('fullpage stickers') || F.includes('fullpage') || F.includes('full-page');
+			}
+
 			function renderCard(file, folderHref, label, i, resolvedSrc){
 				const baseName = file.replace(/(_full)?\.(jpg|jpeg|png)$/i, '');
 				const folderName = decodeURIComponent(folderHref.replace(/^outputs\//, '').replace(/\/$/, ''));
@@ -864,11 +877,11 @@
 						${sizes.map(size => `<option value="${size}" ${size===defaultSize?'selected':''} data-price="${priceMap.posters[size]}">${size} (₹${priceMap.posters[size]})</option>`).join('')}
 					</select></div>`;
 					category = 'Poster';
-				} else if(label.toLowerCase().includes('single sticker')){
+				} else if(isSingleSticker(label, folderHref)){
 					sizes = ['Single'];
 					defaultPrice = priceMap.stickers['Single'];
 					category = 'Sticker';
-				} else if(label.toLowerCase().includes('fullpage sticker')){
+				} else if(isFullpageSticker(label, folderHref)){
 					sizes = ['A4 (Full)', 'A3 (Full)'];
 					// Determine default price and size based on file name (A4 or A3)
 					if(file.includes('A3')) {
@@ -929,7 +942,7 @@
 				}
 				// For full page stickers, use a narrower width so the full image appears
 				let imgStyle = "width:100%;height:100%;object-fit:cover;border-radius:6px;";
-				   if(label.toLowerCase().includes('fullpage sticker')) {
+				   if(isFullpageSticker(label, folderHref)) {
 					   imgStyle = "width:70%;height:100%;object-fit:contain;border-radius:6px;display:block;margin:0 auto;";
 				   } else if(label.toLowerCase().includes('bookmark')) {
 					   imgStyle = "width:100%;height:100%;object-fit:contain;border-radius:6px;display:block;margin:0 auto;";
@@ -992,6 +1005,9 @@
 					files = fileMap[folderNameForMap] || [];
 					folderName = folderNameForMap;
 				}
+				// If this is a stickers folder, normalize label to aid downstream checks
+				if(isSingleSticker(label, folderHref)) label = 'SINGLE STICKERS';
+				if(isFullpageSticker(label, folderHref)) label = 'FULLPAGE STICKERS';
 
 				if(files.length === 0){
 					catalogGrid.innerHTML = `<p style="color:var(--muted);text-align:center;padding:40px;">No items found for "${label}".</p>`;
@@ -1462,19 +1478,19 @@
 				if(payload.folder && payload.folder.startsWith('outputs/')){
 					sizes = posterSizes;
 					priceSource = priceMap.posters;
-				} else if(payload.category.toLowerCase().includes('fullpage sticker')){
+				} else if(payload.category && isFullpageSticker(payload.category, payload.folder)){
 					sizes = ['A4 (Full)', 'A3 (Full)'];
 					priceSource = priceMap.stickers;
-				} else if(payload.category.toLowerCase().includes('bookmark')){
+				} else if(payload.category && payload.category.toLowerCase().includes('bookmark')){
 					sizes = ['Default'];
 					currentPrice = priceMap.bookmarks.Default;
-				} else if(payload.category.toLowerCase().includes('single sticker')){
+				} else if(payload.category && isSingleSticker(payload.category, payload.folder)){
 					sizes = ['Single'];
 					currentPrice = priceMap.stickers['Single'];
 				}
 
 				// Always show selector for full page stickers, or if multiple sizes
-				if(sizes.length > 1 || payload.category.toLowerCase().includes('fullpage sticker')){
+				if(sizes.length > 1 || (payload.category && isFullpageSticker(payload.category, payload.folder))){
 					const sel = document.createElement('select');
 					sel.className='size-select';
 					sel.style.cssText = 'padding:8px 12px;border-radius:6px;background:#151515;color:var(--fg);border:1px solid rgba(255,255,255,0.06);';
