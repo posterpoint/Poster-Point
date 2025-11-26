@@ -953,14 +953,9 @@
 					if(fallbackSrc) fallbackSrc = encodeURI(fallbackSrc);
 				}catch(e){ /* ignore encoding errors */ }
 
-				// If we already resolved a working src, don't attach onerror chaining; otherwise fall back as before
-				if(resolvedSrc){
-					thumbHtml = `<div class="thumb"><img src="${thumbSrc}" alt="${label} ${i+1}" loading="lazy" decoding="async" style="${imgStyle}"></div>`;
-				} else {
-					// Use encoded fallbackSrc in the onerror chain to avoid mismatches
-					const fb = fallbackSrc || outputsFallback;
-					thumbHtml = `<div class="thumb"><img src="${thumbSrc}" alt="${label} ${i+1}" loading="lazy" decoding="async" style="${imgStyle}" onerror="try{ if('${fallbackSrc}' && this.src !== '${fallbackSrc}') { this.onerror = null; this.src = '${fallbackSrc}'; } else if(this.src !== '${outputsFallback}') { this.onerror = null; this.src = '${outputsFallback}'; } else { this.style.display='none';this.parentElement.textContent='Image not available'; } }catch(e){ this.style.display='none'; }"></div>`;
-				}
+				// Always use onerror fallback, even for resolvedSrc, to catch mobile-specific failures
+				const fb = fallbackSrc || outputsFallback;
+				thumbHtml = `<div class="thumb"><img src="${thumbSrc}" alt="${label} ${i+1}" loading="lazy" decoding="async" style="${imgStyle}" onerror="try{ if('${fallbackSrc}' && this.src !== '${fallbackSrc}') { this.onerror = null; this.src = '${fallbackSrc}'; } else if(this.src !== '${outputsFallback}') { this.onerror = null; this.src = '${outputsFallback}'; } else { this.style.display='none';this.parentElement.textContent='Image not available'; } }catch(e){ this.style.display='none'; }"></div>`;
 
 				return `
 					<div class="card" style="animation: itemEnter 260ms ease forwards ${50 * i}ms; opacity:0; transform:translateY(10px);">

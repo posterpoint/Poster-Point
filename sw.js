@@ -1,4 +1,4 @@
-const CACHE_NAME = 'posterpoint-v2';
+const CACHE_NAME = 'posterpoint-v3';
 const ASSETS = [
   '/',
   '/index.html',
